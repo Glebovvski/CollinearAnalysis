@@ -80,7 +80,7 @@
             this.CollinearMatrix.Location = new System.Drawing.Point(496, 95);
             this.CollinearMatrix.Name = "CollinearMatrix";
             this.CollinearMatrix.RowTemplate.Height = 24;
-            this.CollinearMatrix.Size = new System.Drawing.Size(301, 150);
+            this.CollinearMatrix.Size = new System.Drawing.Size(420, 196);
             this.CollinearMatrix.TabIndex = 4;
             // 
             // label1

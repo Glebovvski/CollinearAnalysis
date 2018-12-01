@@ -13,11 +13,39 @@ namespace Collinear_Analysis
 {
     public partial class Form1 : Form
     {
+        double Kv_Kv = 0;
+        double Kv_Ibp = 0;
+        double Kv_Zp = 0;
+        double Kv_Isc = 0;
+        double Kv_Vzr = 0;
+
+        double Ibp_Ibp = 0;
+        double Ibp_Zp = 0;
+        double Ibp_Isc = 0;
+        double Ibp_Vzr = 0;
+
+        double Zp_Zp = 0;
+        double Zp_Isc = 0;
+        double Zp_Vzr = 0;
+
+        double Isc_Isc = 0;
+        double Isc_Vzr = 0;
+        double Vzr_Vzr = 0;
+
         List<double> first = new List<double>();
         List<double> second = new List<double>();
         List<double> third = new List<double>();
         List<double> fourth = new List<double>();
         List<double> fifth = new List<double>();
+
+        List<string> names = new List<string>()
+                {
+                    "КВ осіб",
+                    "ІБП %",
+                    "ІСЦ",
+                    "ЗП грн",
+                    "ВЗР тис.т"
+                };
 
         public Form1()
         {
@@ -26,6 +54,10 @@ namespace Collinear_Analysis
 
         private void GetFile_Click(object sender, EventArgs e)
         {
+            dt.DataSource = string.Empty;
+            CollinearMatrix.Columns.Clear();
+            
+
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "Файл Excel|*.XLSX;*.XLS"; ;
 
@@ -46,7 +78,6 @@ namespace Collinear_Analysis
             var data = dt.Rows.OfType<DataGridViewRow>().Where(x => x.Cells[0].Value != null).Select(
                             r => r.Cells.OfType<DataGridViewCell>().Select(c => c.Value).ToArray()).ToList();
 
-
             foreach (var item in data)
             {
                 first.Add(double.Parse(item[0].ToString()));
@@ -57,27 +88,41 @@ namespace Collinear_Analysis
             }
         }
 
+        private void SetCollinearMatrix()
+        {
+            CollinearMatrix.ColumnCount = 6;
+            CollinearMatrix.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            CollinearMatrix.Columns[0].Name = "";
+            CollinearMatrix.Columns[1].Name = names[0];
+            CollinearMatrix.Columns[2].Name = names[1];
+            CollinearMatrix.Columns[3].Name = names[2];
+            CollinearMatrix.Columns[4].Name = names[3];
+            CollinearMatrix.Columns[5].Name = names[4];
+
+            CollinearMatrix.Rows.Add(names[0], Kv_Kv);
+            CollinearMatrix.Rows.Add(names[1], Kv_Ibp, Ibp_Ibp);
+            CollinearMatrix.Rows.Add(names[2], Kv_Isc, Ibp_Isc, Isc_Isc);
+            CollinearMatrix.Rows.Add(names[3], Kv_Zp, Ibp_Zp, Zp_Isc, Zp_Zp);
+            CollinearMatrix.Rows.Add(names[4], Kv_Vzr, Ibp_Vzr, Isc_Vzr, Zp_Vzr, Vzr_Vzr);
+
+            DataGridViewCellStyle style = new DataGridViewCellStyle();
+            style.BackColor = System.Drawing.Color.Red;
+
+            for(int i=0;i<CollinearMatrix.Rows.Count; i++)
+            {
+                for (int j = 1; j < CollinearMatrix.Rows[i].Cells.Count;j++)
+                {
+                    if (CollinearMatrix.Rows[i].Cells[j].Value != null)
+                    {
+                        if (double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) >= 0.5)
+                            CollinearMatrix.Rows[i].Cells[j].Style = style;
+                    }
+                }
+            }
+        }
+
         private void CollinearBuild_Click(object sender, EventArgs e)
         {
-            double Kv_Kv = 0;
-            double Kv_Ibp = 0;
-            double Kv_Zp = 0;
-            double Kv_Isc = 0;
-            double Kv_Vzr = 0;
-
-            double Ibp_Ibp = 0;
-            double Ibp_Zp = 0;
-            double Ibp_Isc = 0;
-            double Ibp_Vzr = 0;
-
-            double Zp_Zp = 0;
-            double Zp_Isc = 0;
-            double Zp_Vzr = 0;
-
-            double Isc_Isc = 0;
-            double Isc_Vzr = 0;
-            double Vzr_Vzr = 0;
-
             if (dt.DataSource == null)
                 MessageBox.Show("Open excel file with data");
 
@@ -85,25 +130,27 @@ namespace Collinear_Analysis
             {
                 GetData();
 
-                Kv_Kv = Correlation(first, first);
-                Kv_Ibp = Correlation(first, second);
-                Kv_Isc = Correlation(first, third);
-                Kv_Zp = Correlation(first, fourth);
-                Kv_Vzr = Correlation(first, fifth);
+                Kv_Kv = Math.Round(Correlation(first, first),2);
+                Kv_Ibp = Math.Round(Correlation(first, second),2);
+                Kv_Isc = Math.Round(Correlation(first, third),2);
+                Kv_Zp = Math.Round(Correlation(first, fourth),2);
+                Kv_Vzr = Math.Round(Correlation(first, fifth),2);
 
-                Ibp_Ibp = Correlation(second, second);
-                Ibp_Isc = Correlation(second, third);
-                Ibp_Zp = Correlation(second, fourth);
-                Ibp_Vzr = Correlation(second, fifth);
+                Ibp_Ibp = Math.Round(Correlation(second, second),2);
+                Ibp_Isc = Math.Round(Correlation(second, third),2);
+                Ibp_Zp = Math.Round(Correlation(second, fourth),2);
+                Ibp_Vzr = Math.Round(Correlation(second, fifth),2);
 
-                Zp_Zp = Correlation(fourth, fourth);
-                Zp_Isc = Correlation(fourth, third);
-                Zp_Vzr = Correlation(fourth, fifth);
+                Zp_Zp = Math.Round(Correlation(fourth, fourth),2);
+                Zp_Isc = Math.Round(Correlation(fourth, third),2);
+                Zp_Vzr = Math.Round(Correlation(fourth, fifth),2);
 
-                Isc_Isc = Correlation(third, third);
-                Isc_Vzr = Correlation(third, fifth);
+                Isc_Isc = Math.Round(Correlation(third, third),2);
+                Isc_Vzr = Math.Round(Correlation(third, fifth),2);
 
-                Vzr_Vzr = Correlation(fifth, fifth);
+                Vzr_Vzr = Math.Round(Correlation(fifth, fifth),2);
+
+                SetCollinearMatrix();
             }
         }
 
