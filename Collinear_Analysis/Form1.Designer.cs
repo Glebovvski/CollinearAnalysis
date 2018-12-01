@@ -76,9 +76,13 @@
             // 
             // CollinearMatrix
             // 
+            this.CollinearMatrix.AllowUserToAddRows = false;
+            this.CollinearMatrix.AllowUserToDeleteRows = false;
             this.CollinearMatrix.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.CollinearMatrix.Location = new System.Drawing.Point(496, 95);
+            this.CollinearMatrix.MultiSelect = false;
             this.CollinearMatrix.Name = "CollinearMatrix";
+            this.CollinearMatrix.ReadOnly = true;
             this.CollinearMatrix.RowTemplate.Height = 24;
             this.CollinearMatrix.Size = new System.Drawing.Size(420, 196);
             this.CollinearMatrix.TabIndex = 4;

@@ -105,17 +105,32 @@ namespace Collinear_Analysis
             CollinearMatrix.Rows.Add(names[3], Kv_Zp, Ibp_Zp, Zp_Isc, Zp_Zp);
             CollinearMatrix.Rows.Add(names[4], Kv_Vzr, Ibp_Vzr, Isc_Vzr, Zp_Vzr, Vzr_Vzr);
 
-            DataGridViewCellStyle style = new DataGridViewCellStyle();
-            style.BackColor = System.Drawing.Color.Red;
+            DataGridViewCellStyle styleMiddle = new DataGridViewCellStyle();
+            styleMiddle.BackColor = System.Drawing.Color.Orange;
 
-            for(int i=0;i<CollinearMatrix.Rows.Count; i++)
+            DataGridViewCellStyle styleHigh = new DataGridViewCellStyle();
+            styleHigh.BackColor = System.Drawing.Color.Red;
+
+            DataGridViewCellStyle styleLow = new DataGridViewCellStyle();
+            styleLow.BackColor = System.Drawing.Color.Yellow;
+
+            DataGridViewCellStyle styleLowest = new DataGridViewCellStyle();
+            styleLowest.BackColor = System.Drawing.Color.LightBlue;
+
+            for (int i=0;i<CollinearMatrix.Rows.Count; i++)
             {
                 for (int j = 1; j < CollinearMatrix.Rows[i].Cells.Count;j++)
                 {
                     if (CollinearMatrix.Rows[i].Cells[j].Value != null)
                     {
-                        if (double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) >= 0.5)
-                            CollinearMatrix.Rows[i].Cells[j].Style = style;
+                        if (double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) >= 0.1 && double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) <= 0.3)
+                            CollinearMatrix.Rows[i].Cells[j].Style = styleLowest;
+                        else if (double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) > 0.3 && double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) < 0.5)
+                            CollinearMatrix.Rows[i].Cells[j].Style = styleLow;
+                        else if (double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) >= 0.5 && double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) <= 0.7)
+                            CollinearMatrix.Rows[i].Cells[j].Style = styleMiddle;
+                        else if (double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) > 0.7 && double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) <= 1)
+                            CollinearMatrix.Rows[i].Cells[j].Style = styleHigh;
                     }
                 }
             }
