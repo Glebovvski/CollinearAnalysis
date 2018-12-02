@@ -52,7 +52,10 @@ namespace Collinear_Analysis
             styleMiddle.BackColor = System.Drawing.Color.Orange;
 
             DataGridViewCellStyle styleHigh = new DataGridViewCellStyle();
-            styleHigh.BackColor = System.Drawing.Color.Red;
+            styleHigh.BackColor = System.Drawing.Color.OrangeRed;
+
+            DataGridViewCellStyle styleVeryHigh = new DataGridViewCellStyle();
+            styleVeryHigh.BackColor = System.Drawing.Color.Red;
 
             DataGridViewCellStyle styleLow = new DataGridViewCellStyle();
             styleLow.BackColor = System.Drawing.Color.Yellow;
@@ -63,18 +66,26 @@ namespace Collinear_Analysis
             DataGridViewCellStyle styleLowLow = new DataGridViewCellStyle();
             styleLowLow.BackColor = System.Drawing.Color.LightGray;
 
+            DataGridViewCellStyle styleFunc = new DataGridViewCellStyle();
+            styleFunc.BackColor = System.Drawing.Color.Purple;
+
             for (int i = 0; i < matr.Rows.Count; i++)
             {
                 for (int j = 0; j < matr.Rows[i].Cells.Count; j++)
                 {
-                    if (double.Parse(matr.Rows[i].Cells[j].Value.ToString()) >= 0.1 && double.Parse(matr.Rows[i].Cells[j].Value.ToString()) <= 0.3)
+                    double cell = double.Parse(matr.Rows[i].Cells[j].Value.ToString());
+                    if ((cell >= 0.1 && cell <= 0.3) || (cell >= -0.3 && cell <= -0.1))
                         matr.Rows[i].Cells[j].Style = styleLowest;
-                    else if (double.Parse(matr.Rows[i].Cells[j].Value.ToString()) > 0.3 && double.Parse(matr.Rows[i].Cells[j].Value.ToString()) < 0.5)
+                    else if ((cell > 0.3 && cell < 0.5) || (cell < -0.3 && cell > -0.5))
                         matr.Rows[i].Cells[j].Style = styleLow;
-                    else if (double.Parse(matr.Rows[i].Cells[j].Value.ToString()) >= 0.5 && double.Parse(matr.Rows[i].Cells[j].Value.ToString()) <= 0.7)
+                    else if ((cell >= 0.5 && cell <= 0.7) || (cell <= -0.5 && cell >= -0.7))
                         matr.Rows[i].Cells[j].Style = styleMiddle;
-                    else if (double.Parse(matr.Rows[i].Cells[j].Value.ToString()) > 0.7 && double.Parse(matr.Rows[i].Cells[j].Value.ToString()) <= 1)
+                    else if ((cell > 0.7 && cell <= 0.9) || (cell < -0.7 && cell >= -0.9))
                         matr.Rows[i].Cells[j].Style = styleHigh;
+                    else if ((cell > 0.9 && cell <= 0.99) || (cell < -0.9 && cell >= -0.99))
+                        matr.Rows[i].Cells[j].Style = styleVeryHigh;
+                    else if ((cell > 0.99 && cell <= 1) || (cell < -0.99 && cell >= -1))
+                        matr.Rows[i].Cells[j].Style = styleVeryHigh;
                     else matr.Rows[i].Cells[j].Style = styleLowLow;
                 }
             }
@@ -85,10 +96,20 @@ namespace Collinear_Analysis
 
         }
 
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
 
         private void matr_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void Analysis()
+        {
+            analysisTb.Text = "The smallest correlation coefficient is: " + min + " of " + matr.Rows[mini].HeaderCell.Value + " to " + matr.Rows[minj].HeaderCell.Value + "\n" +
+                "The highest correlation coefficient is: " + max + " of " + matr.Rows[maxi].HeaderCell.Value + " to " + matr.Rows[maxj].HeaderCell.Value;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -166,7 +187,7 @@ namespace Collinear_Analysis
                         dispy = sumyy / sumRow - avry * avry;
                         avrsqrx = Math.Sqrt(dispx);
                         avrsqry = Math.Sqrt(dispy);
-                        koefkorel = Math.Round((avrxy - avrx * avry) / (avrsqrx * avrsqry), 2);
+                        koefkorel = Math.Round((avrxy - avrx * avry) / (avrsqrx * avrsqry), 1);
                     }
                     matr.Rows[l].Cells[k].Value = koefkorel;
                 }
@@ -179,9 +200,9 @@ namespace Collinear_Analysis
             Setmatr();
 
             double[,] rez;
-            rez = new double[matr.RowCount, matr.ColumnCount];
+            rez = new double[1, matr.ColumnCount];
 
-            for (i = 0; i < matr.RowCount; i++)
+            for (i = 0; i < 1; i++)
             {
                 for (j = 0; j < matr.ColumnCount; j++)
                 {
@@ -190,29 +211,28 @@ namespace Collinear_Analysis
             }
 
 
-            min = rez[1, 0];
-            max = rez[1, 0];
+            min = 10;
+            max = 0;
             for (i = 0; i < rez.GetLength(0); i++)
             {
                 for (j = 0; j < rez.GetLength(1); j++)
                 {
-                    if (i > j)
+                    if (min > rez[i, j] && rez[i, j] >= 0 && rez[i, j] < 1)
                     {
-                        if (min > rez[i, j])
-                        {
-                            min = rez[i, j];
-                            mini = i;
-                            minj = j;
-                        }
-                        if (max < rez[i, j])
-                        {
-                            max = rez[i, j];
-                            maxi = i;
-                            maxj = j;
-                        }
+                        min = rez[i, j];
+                        mini = i;
+                        minj = j;
+                    }
+                    if (max < rez[i, j] && rez[i, j] >= 0 && rez[i, j] < 1)
+                    {
+                        max = rez[i, j];
+                        maxi = i;
+                        maxj = j;
                     }
                 }
             }
+
+            Analysis();
         }
     }
 

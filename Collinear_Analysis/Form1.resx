@@ -117,4 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBox2.Text" xml:space="preserve">
+    <value>Значення коефіціента кореляції  Зв'язок
+[0.1 ... 0.3]                                          Незначний
+[0.3 ... 0.5]                                          Помірний
+[0.5 ... 0.7]                                          Істотний
+[0.7 ... 0.9]                                          Високий
+[0.9 ... 0.99]                                        Дуже високий
+1.0                                                      Функціональний                           </value>
+  </data>
 </root>
