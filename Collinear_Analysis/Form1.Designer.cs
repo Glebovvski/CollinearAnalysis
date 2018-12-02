@@ -31,11 +31,11 @@
             this.dt = new System.Windows.Forms.DataGridView();
             this.GetFile = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.CollinearBuild = new System.Windows.Forms.Button();
-            this.CollinearMatrix = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
+            this.matr = new System.Windows.Forms.DataGridView();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CollinearMatrix)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.matr)).BeginInit();
             this.SuspendLayout();
             // 
             // dt
@@ -64,29 +64,6 @@
             this.textBox1.Size = new System.Drawing.Size(388, 22);
             this.textBox1.TabIndex = 2;
             // 
-            // CollinearBuild
-            // 
-            this.CollinearBuild.Location = new System.Drawing.Point(487, 11);
-            this.CollinearBuild.Name = "CollinearBuild";
-            this.CollinearBuild.Size = new System.Drawing.Size(136, 45);
-            this.CollinearBuild.TabIndex = 3;
-            this.CollinearBuild.Text = "Build Collinear matrix";
-            this.CollinearBuild.UseVisualStyleBackColor = true;
-            this.CollinearBuild.Click += new System.EventHandler(this.CollinearBuild_Click);
-            // 
-            // CollinearMatrix
-            // 
-            this.CollinearMatrix.AllowUserToAddRows = false;
-            this.CollinearMatrix.AllowUserToDeleteRows = false;
-            this.CollinearMatrix.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CollinearMatrix.Location = new System.Drawing.Point(496, 95);
-            this.CollinearMatrix.MultiSelect = false;
-            this.CollinearMatrix.Name = "CollinearMatrix";
-            this.CollinearMatrix.ReadOnly = true;
-            this.CollinearMatrix.RowTemplate.Height = 24;
-            this.CollinearMatrix.Size = new System.Drawing.Size(420, 196);
-            this.CollinearMatrix.TabIndex = 4;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -96,21 +73,44 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "Collinear Matrix";
             // 
+            // matr
+            // 
+            this.matr.AllowUserToAddRows = false;
+            this.matr.AllowUserToDeleteRows = false;
+            this.matr.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.matr.Location = new System.Drawing.Point(496, 95);
+            this.matr.MultiSelect = false;
+            this.matr.Name = "matr";
+            this.matr.ReadOnly = true;
+            this.matr.RowTemplate.Height = 24;
+            this.matr.Size = new System.Drawing.Size(420, 196);
+            this.matr.TabIndex = 4;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(496, 11);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(136, 45);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Build Collinear matrix";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1518, 626);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.CollinearMatrix);
-            this.Controls.Add(this.CollinearBuild);
+            this.Controls.Add(this.matr);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.GetFile);
             this.Controls.Add(this.dt);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.dt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CollinearMatrix)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.matr)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -121,9 +121,9 @@
         private System.Windows.Forms.DataGridView dt;
         private System.Windows.Forms.Button GetFile;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button CollinearBuild;
-        private System.Windows.Forms.DataGridView CollinearMatrix;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridView matr;
+        private System.Windows.Forms.Button button1;
     }
 }
 

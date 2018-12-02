@@ -13,39 +13,10 @@ namespace Collinear_Analysis
 {
     public partial class Form1 : Form
     {
-        double Kv_Kv = 0;
-        double Kv_Ibp = 0;
-        double Kv_Zp = 0;
-        double Kv_Isc = 0;
-        double Kv_Vzr = 0;
-
-        double Ibp_Ibp = 0;
-        double Ibp_Zp = 0;
-        double Ibp_Isc = 0;
-        double Ibp_Vzr = 0;
-
-        double Zp_Zp = 0;
-        double Zp_Isc = 0;
-        double Zp_Vzr = 0;
-
-        double Isc_Isc = 0;
-        double Isc_Vzr = 0;
-        double Vzr_Vzr = 0;
-
-        List<double> first = new List<double>();
-        List<double> second = new List<double>();
-        List<double> third = new List<double>();
-        List<double> fourth = new List<double>();
-        List<double> fifth = new List<double>();
-
-        List<string> names = new List<string>()
-                {
-                    "КВ осіб",
-                    "ІБП %",
-                    "ІСЦ",
-                    "ЗП грн",
-                    "ВЗР тис.т"
-                };
+        double min = 0;
+        double max = 0;
+        int mini = 0, minj = 0;
+        int maxi = 0, maxj = 0;
 
         public Form1()
         {
@@ -55,8 +26,8 @@ namespace Collinear_Analysis
         private void GetFile_Click(object sender, EventArgs e)
         {
             dt.DataSource = string.Empty;
-            CollinearMatrix.Columns.Clear();
-            
+            matr.Columns.Clear();
+
 
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "Файл Excel|*.XLSX;*.XLS"; ;
@@ -73,37 +44,9 @@ namespace Collinear_Analysis
             }
         }
 
-        private void GetData()
+        private void Setmatr()
         {
-            var data = dt.Rows.OfType<DataGridViewRow>().Where(x => x.Cells[0].Value != null).Select(
-                            r => r.Cells.OfType<DataGridViewCell>().Select(c => c.Value).ToArray()).ToList();
-
-            foreach (var item in data)
-            {
-                first.Add(double.Parse(item[0].ToString()));
-                second.Add(double.Parse(item[1].ToString()));
-                third.Add(double.Parse(item[2].ToString()));
-                fourth.Add(double.Parse(item[3].ToString()));
-                fifth.Add(double.Parse(item[4].ToString()));
-            }
-        }
-
-        private void SetCollinearMatrix()
-        {
-            CollinearMatrix.ColumnCount = 6;
-            CollinearMatrix.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            CollinearMatrix.Columns[0].Name = "";
-            CollinearMatrix.Columns[1].Name = names[0];
-            CollinearMatrix.Columns[2].Name = names[1];
-            CollinearMatrix.Columns[3].Name = names[2];
-            CollinearMatrix.Columns[4].Name = names[3];
-            CollinearMatrix.Columns[5].Name = names[4];
-
-            CollinearMatrix.Rows.Add(names[0], Kv_Kv);
-            CollinearMatrix.Rows.Add(names[1], Kv_Ibp, Ibp_Ibp);
-            CollinearMatrix.Rows.Add(names[2], Kv_Isc, Ibp_Isc, Isc_Isc);
-            CollinearMatrix.Rows.Add(names[3], Kv_Zp, Ibp_Zp, Zp_Isc, Zp_Zp);
-            CollinearMatrix.Rows.Add(names[4], Kv_Vzr, Ibp_Vzr, Isc_Vzr, Zp_Vzr, Vzr_Vzr);
+            matr.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             DataGridViewCellStyle styleMiddle = new DataGridViewCellStyle();
             styleMiddle.BackColor = System.Drawing.Color.Orange;
@@ -117,92 +60,162 @@ namespace Collinear_Analysis
             DataGridViewCellStyle styleLowest = new DataGridViewCellStyle();
             styleLowest.BackColor = System.Drawing.Color.LightBlue;
 
-            for (int i=0;i<CollinearMatrix.Rows.Count; i++)
+            DataGridViewCellStyle styleLowLow = new DataGridViewCellStyle();
+            styleLowLow.BackColor = System.Drawing.Color.LightGray;
+
+            for (int i = 0; i < matr.Rows.Count; i++)
             {
-                for (int j = 1; j < CollinearMatrix.Rows[i].Cells.Count;j++)
+                for (int j = 0; j < matr.Rows[i].Cells.Count; j++)
                 {
-                    if (CollinearMatrix.Rows[i].Cells[j].Value != null)
-                    {
-                        if (double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) >= 0.1 && double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) <= 0.3)
-                            CollinearMatrix.Rows[i].Cells[j].Style = styleLowest;
-                        else if (double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) > 0.3 && double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) < 0.5)
-                            CollinearMatrix.Rows[i].Cells[j].Style = styleLow;
-                        else if (double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) >= 0.5 && double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) <= 0.7)
-                            CollinearMatrix.Rows[i].Cells[j].Style = styleMiddle;
-                        else if (double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) > 0.7 && double.Parse(CollinearMatrix.Rows[i].Cells[j].Value.ToString()) <= 1)
-                            CollinearMatrix.Rows[i].Cells[j].Style = styleHigh;
-                    }
+                    if (double.Parse(matr.Rows[i].Cells[j].Value.ToString()) >= 0.1 && double.Parse(matr.Rows[i].Cells[j].Value.ToString()) <= 0.3)
+                        matr.Rows[i].Cells[j].Style = styleLowest;
+                    else if (double.Parse(matr.Rows[i].Cells[j].Value.ToString()) > 0.3 && double.Parse(matr.Rows[i].Cells[j].Value.ToString()) < 0.5)
+                        matr.Rows[i].Cells[j].Style = styleLow;
+                    else if (double.Parse(matr.Rows[i].Cells[j].Value.ToString()) >= 0.5 && double.Parse(matr.Rows[i].Cells[j].Value.ToString()) <= 0.7)
+                        matr.Rows[i].Cells[j].Style = styleMiddle;
+                    else if (double.Parse(matr.Rows[i].Cells[j].Value.ToString()) > 0.7 && double.Parse(matr.Rows[i].Cells[j].Value.ToString()) <= 1)
+                        matr.Rows[i].Cells[j].Style = styleHigh;
+                    else matr.Rows[i].Cells[j].Style = styleLowLow;
                 }
             }
         }
 
         private void CollinearBuild_Click(object sender, EventArgs e)
         {
-            if (dt.DataSource == null)
-                MessageBox.Show("Open excel file with data");
 
-            else
+        }
+
+
+        private void matr_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int i = 0;
+            int j = 0;
+            double[,] matrs;
+            matrs = new double[dt.RowCount, dt.ColumnCount];
+
+            //Input values from stats
+            for (i = 0; i < dt.RowCount; i++)
             {
-                GetData();
+                for (j = 0; j < dt.ColumnCount; j++)
+                {
+                    matrs[i, j] = Convert.ToDouble(dt.Rows[i].Cells[j].Value);
+                }
+            }
 
-                Kv_Kv = Math.Round(Correlation(first, first),2);
-                Kv_Ibp = Math.Round(Correlation(first, second),2);
-                Kv_Isc = Math.Round(Correlation(first, third),2);
-                Kv_Zp = Math.Round(Correlation(first, fourth),2);
-                Kv_Vzr = Math.Round(Correlation(first, fifth),2);
+            double[,] x;
+            double[,] y;
+            x = new double[matrs.GetLength(0), 1];
+            y = new double[matrs.GetLength(0), 1];
+            int k = 0;
+            int l = 0;
+            int sumRow = matrs.GetLength(0) - 1;
+            double sumx = 0;
+            double sumy = 0;
+            double sumxy = 0;
+            double sumxx = 0;
+            double sumyy = 0;
+            double avrx = 0;
+            double avry = 0;
+            double avrxy = 0;
+            double dispx = 0;
+            double dispy = 0;
+            double avrsqrx = 0;
+            double avrsqry = 0;
+            double koefkorel = 0;
+            matr.RowCount = matrs.GetLength(1);
+            matr.ColumnCount = matrs.GetLength(1);
 
-                Ibp_Ibp = Math.Round(Correlation(second, second),2);
-                Ibp_Isc = Math.Round(Correlation(second, third),2);
-                Ibp_Zp = Math.Round(Correlation(second, fourth),2);
-                Ibp_Vzr = Math.Round(Correlation(second, fifth),2);
+            for (l = 0; l < matrs.GetLength(1); l++)
+            {
+                for (k = 0; k < matrs.GetLength(1); k++)
+                {
+                    sumx = 0;
+                    sumy = 0;
+                    sumxy = 0;
+                    sumxx = 0;
+                    sumyy = 0;
+                    avrx = 0;
+                    avry = 0;
+                    avrxy = 0;
+                    dispx = 0;
+                    dispy = 0;
+                    avrsqrx = 0;
+                    avrsqry = 0;
+                    koefkorel = 0;
+                    for (i = 0; i < sumRow; i++)
+                    {
+                        for (j = 0; j < 1; j++)
+                        {
+                            x[i, j] = matrs[i, l];
+                            sumx = sumx + x[i, j];
+                            y[i, j] = matrs[i, k];
+                            sumy = sumy + y[i, j];
+                            sumxy = sumxy + x[i, j] * y[i, j];
+                            sumxx = sumxx + x[i, j] * x[i, j];
+                            sumyy = sumyy + y[i, j] * y[i, j];
+                        }
+                        avrx = sumx / sumRow;
+                        avry = sumy / sumRow;
+                        avrxy = sumxy / sumRow;
+                        dispx = sumxx / sumRow - avrx * avrx;
+                        dispy = sumyy / sumRow - avry * avry;
+                        avrsqrx = Math.Sqrt(dispx);
+                        avrsqry = Math.Sqrt(dispy);
+                        koefkorel = Math.Round((avrxy - avrx * avry) / (avrsqrx * avrsqry), 2);
+                    }
+                    matr.Rows[l].Cells[k].Value = koefkorel;
+                }
 
-                Zp_Zp = Math.Round(Correlation(fourth, fourth),2);
-                Zp_Isc = Math.Round(Correlation(fourth, third),2);
-                Zp_Vzr = Math.Round(Correlation(fourth, fifth),2);
+                matr.Columns[l].HeaderText = dt.Columns[l].HeaderText;
+                matr.Rows[l].HeaderCell.Value = dt.Columns[l].HeaderText;
 
-                Isc_Isc = Math.Round(Correlation(third, third),2);
-                Isc_Vzr = Math.Round(Correlation(third, fifth),2);
+            }
 
-                Vzr_Vzr = Math.Round(Correlation(fifth, fifth),2);
+            Setmatr();
 
-                SetCollinearMatrix();
+            double[,] rez;
+            rez = new double[matr.RowCount, matr.ColumnCount];
+
+            for (i = 0; i < matr.RowCount; i++)
+            {
+                for (j = 0; j < matr.ColumnCount; j++)
+                {
+                    rez[i, j] = Convert.ToDouble(matr.Rows[i].Cells[j].Value);
+                }
+            }
+
+
+            min = rez[1, 0];
+            max = rez[1, 0];
+            for (i = 0; i < rez.GetLength(0); i++)
+            {
+                for (j = 0; j < rez.GetLength(1); j++)
+                {
+                    if (i > j)
+                    {
+                        if (min > rez[i, j])
+                        {
+                            min = rez[i, j];
+                            mini = i;
+                            minj = j;
+                        }
+                        if (max < rez[i, j])
+                        {
+                            max = rez[i, j];
+                            maxi = i;
+                            maxj = j;
+                        }
+                    }
+                }
             }
         }
-
-        private double Correlation(List<double> first, List<double> second)
-        {
-            double[] array_xy = new double[first.Count];
-            double[] array_xp2 = new double[first.Count];
-            double[] array_yp2 = new double[first.Count];
-            for (int i = 0; i < first.Count; i++)
-                array_xy[i] = first[i] * second[i];
-            for (int i = 0; i < first.Count; i++)
-                array_xp2[i] = Math.Pow(first[i], 2.0);
-            for (int i = 0; i < first.Count; i++)
-                array_yp2[i] = Math.Pow(second[i], 2.0);
-            double sum_x = 0;
-            double sum_y = 0;
-            foreach (double n in first)
-                sum_x += n;
-            foreach (double n in second)
-                sum_y += n;
-            double sum_xy = 0;
-            foreach (double n in array_xy)
-                sum_xy += n;
-            double sum_xpow2 = 0;
-            foreach (double n in array_xp2)
-                sum_xpow2 += n;
-            double sum_ypow2 = 0;
-            foreach (double n in array_yp2)
-                sum_ypow2 += n;
-            double Ex2 = Math.Pow(sum_x, 2.00);
-            double Ey2 = Math.Pow(sum_y, 2.00);
-
-            double Correl =
-            (first.Count * sum_xy - sum_x * sum_y) /
-            Math.Sqrt((first.Count * sum_xpow2 - Ex2) * (first.Count * sum_ypow2 - Ey2));
-
-            return Correl;
-        }
     }
+
 }
+
+
