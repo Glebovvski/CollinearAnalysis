@@ -15,7 +15,9 @@ namespace Collinear_Analysis
     {
         double[,] rez;
         int sumRow = 0;
-        
+
+        double[,] correlationMat = new double[5, 5];
+
         double min = 0;
         double max = 0;
         int mini = 0, minj = 0;
@@ -202,6 +204,7 @@ namespace Collinear_Analysis
                         koefkorel = Math.Round((avrxy - avrx * avry) / (avrsqrx * avrsqry), 1);
                     }
                     matr.Rows[l].Cells[k].Value = koefkorel;
+                    correlationMat[l, k] = double.Parse(matr.Rows[l].Cells[k].Value.ToString());
                 }
 
                 matr.Columns[l].HeaderText = dt.Columns[l].HeaderText;
@@ -292,10 +295,8 @@ namespace Collinear_Analysis
                 }
                 disp[j] = summ / sumRow;
             }
-            for (j = 0; j < matrs.GetLength(1); j++)
-                Console.WriteLine(" di ={0}", disp[j]);
-            // Матриця кореляції
-            //label9.Text = "Матриця стандартизованих незалежних змінних"; ;\\
+            //for (j = 0; j < matrs.GetLength(1); j++)
+            //    Console.WriteLine(" di ={0}", disp[j]);
 
             normDt.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[0].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
             normDt.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[1].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
@@ -314,100 +315,85 @@ namespace Collinear_Analysis
                 }
 
             }
-            
-            //label8.Text = "Кореляційна матриця";
-            //int k = 0;
-            //int l = 0;
-            //double sumxy = 0;
-            //double avrxy = 0;
-            //double koefkorel = 0;
-            //dataGridView2.RowCount = matrs.GetLength(1);
-            //dataGridView2.ColumnCount = matrs.GetLength(1);
-            //for (l = 0; l < matrs.GetLength(1); l++)
-            //{
-            //    for (k = 0; k < matrs.GetLength(1); k++)
-            //    {
-            //        sumxy = 0;
-            //        for (i = 0; i < sumRow; i++)
-            //        {
-            //            sumxy = sumxy + matrs[i, l] * matrs[i, k];
-            //        }
-            //        avrxy = sumxy / sumRow;
-            //        koefkorel = (avrxy - avr[k] * avr[l]) / (Math.Sqrt(disp[l]) * Math.Sqrt(disp[k]));
-            //        dataGridView2.Rows[l].Cells[k].Value = koefkorel;
-            //    }
-            //    dataGridView2.Columns[l].HeaderText = dataGridView1.Columns[l + 1].HeaderText;
-            //    dataGridView2.Rows[l].HeaderCell.Value = dataGridView1.Columns[l + 1].HeaderText;
-            //}
 
             rez = new double[matr.RowCount, matr.ColumnCount];
             for (i = 0; i < matr.RowCount; i++)
             {
                 for (j = 0; j < matr.ColumnCount; j++)
                 {
-                    rez[i, j] = Convert.ToDouble(matr.Rows[i].Cells[j].Value);
+                    rez[i, j] = Math.Round(Convert.ToDouble(matr.Rows[i].Cells[j].Value),1);
                 }
             }
-            // Визначник матриці, ХІ - квадрат
 
-            const double xitable = 24.996;
-            double det = Determ(rez);
-            Console.WriteLine(det);
-            //textBox3.Text = Convert.ToString(det);
-            MessageBox.Show("determinant: "+det.ToString());
-            double xi = -(sumRow - 1 - 1 / 6 * (2 * matrs.GetLength(1) + 5)) * Math.Log(det, Math.E);
-            //textBox4.Text = Convert.ToString(xi);
-            MessageBox.Show("xi: " + xi.ToString());
+            const double xitable = 3.9403;
+            XiTable_Tb.Text = xitable.ToString();
+            double det = DetGauss(rez);
+            Det_Tb.Text = det.ToString();
+            double xi = -(sumRow - 1 - (2*5 +5)/5) * Math.Log(det, Math.E);
+            Xi_Tb.Text = xi.ToString();
+            
             if (xi > xitable)
             {
-                textBox1.Text = "В масиві незалежних змінних існує мультиколінеарність.";
-                //button5.Enabled = true;
-                MessageBox.Show("something to turn on");
+                CompareXi.Text = ">";
+                StudentFunc();
             }
             else
             {
                 MessageBox.Show("Аналіз завершено. Мультиколінеарності неіснує!");
+                CompareXi.Text = "<";
             }
             button3.Enabled = false;
 
+
         }
 
-
-        public static double[,] GetMinor(double[,] matrix, int row, int column)
+        public double DetGauss(double[,] M)
         {
-            double[,] buf = new double[matrix.GetLength(0) - 1, matrix.GetLength(0) - 1];
-            for (int i = 0; i < matrix.GetLength(0); i++)
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                {
-                    if ((i != row) || (j != column))
-                    {
-                        if (i > row && j < column) buf[i - 1, j] = matrix[i, j];
-                        if (i < row && j > column) buf[i, j - 1] = matrix[i, j];
-                        if (i > row && j > column) buf[i - 1, j - 1] = matrix[i, j];
-                        if (i < row && j < column) buf[i, j] = matrix[i, j];
-                    }
-                }
-            return buf;
-        }
+            double det = 1; // Хранит определитель, который вернёт функция
+            int n = M.GetLength(0); // Размерность матрицы
+            int k = 0;
+            const double E = 1E-9; // Погрешность вычислений
 
-        public static double Determ(double[,] matrix)
-        {
-            if (matrix.GetLength(0) != matrix.GetLength(1)) throw new Exception(" Число строк в матрице не совпадает с числом столбцов");
-            double det = 0;
-            int Rank = matrix.GetLength(0);
-            if (Rank == 1) det = matrix[0, 0];
-            if (Rank == 2) det = matrix[0, 0] * matrix[1, 1] - matrix[0, 1] * matrix[1, 0];
-            if (Rank > 2)
+            for (int i = 0; i < n; i++)
             {
-                for (int j = 0; j < matrix.GetLength(1); j++)
+                k = i;
+                for (int j = i + 1; j < n; j++)
+                    if (Math.Abs(M[j, i]) > Math.Abs(M[k, i]))
+                        k = j;
+
+                if (Math.Abs(M[k,i]) < E)
                 {
-                    det += Math.Pow(-1, 0 + j) * matrix[0, j] * Determ(GetMinor(matrix, 0, j));
+                    det = 0;
+                    break;
                 }
+                Swap(ref M, i, k);
+
+                if (i != k) det *= -1;
+
+                det *= M[i, i];
+
+                for (int j = i + 1; j < n; j++)
+                    M[i, j] /= M[i, i];
+
+                for (int j = 0; j < n; j++)
+                    if ((j != i) && (Math.Abs(M[j, i]) > E))
+                        for (k = i + 1; k < n; k++)
+                            M[j, k] -= M[i, k] * M[j, i];
             }
             return det;
         }
 
+        public void Swap(ref double[,] M, int row1, int row2)
+        {
+            double s = 0;
 
+            for (int i = 0; i < M.GetLength(1); i++)
+            {
+                s = M[row1, i];
+                M[row1, i] = M[row2, i];
+                M[row2,i] = s;
+            }
+        }
 
         private void Analysis()
         {
@@ -419,8 +405,177 @@ namespace Collinear_Analysis
         {
             
         }
-    }
 
+        private void matr_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        public static double[,] One1(double[,] matrix, int len)
+        {
+            double[,] ob = new double[len, len];
+
+            for (int i = 0; i < len; i++)
+            {
+                for (int j = 0; j < len; j++)
+                {
+                    if (i == j)
+                    { ob[i, j] = 1; }
+                    else
+                    { ob[i, j] = 0; }
+
+                }
+
+            }
+
+            double arg;
+            int i1;
+
+            for (int j = 0; j < len;)
+            {
+                for (int i = 0; i < len;)
+                {
+                    if (i != j)
+                    {
+                        arg = matrix[i, j] / matrix[j, j];
+                        for (i1 = 0; i1 < len;)
+                        {
+                            matrix[i, i1] = matrix[i, i1] - matrix[j, i1] * arg;
+                            ob[i, i1] = ob[i, i1] - ob[j, i1] * arg;
+                            i1++;
+                        }
+                    }
+                    i++;
+                }
+                j++;
+            }
+
+            for (int j = 0; j < len; j++)
+            {
+                for (int i = 0; i < len; i++)
+                {
+                    double arg_2;
+                    if (i == j)
+                    {
+                        arg_2 = matrix[i, j];
+                        for (i1 = 0; i1 < len;)
+                        {
+                            matrix[i, i1] = matrix[i, i1] / arg_2;
+                            ob[i, i1] = ob[i, i1] / arg_2;
+                            i1++;
+                        }
+                    }
+
+                }
+
+            }
+            return ob;
+        }
+
+        private void StudentFunc()
+        {
+            //button5.Enabled = false;
+            const double fish = 2.740;
+            //label8.Text = "Обернена матриця";
+            textBox1.Text = " ";
+            //Обернена матриця
+            //double[,] ober = One1(rez, rez.GetLength(0));
+            double[,] ober = One1(correlationMat, correlationMat.GetLength(0));
+
+            InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[0].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
+            InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[1].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
+            InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[2].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
+            InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[3].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
+            InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[4].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
+            //InverseMatrix.Rows.Add();
+            for (int i = 0; i < correlationMat.GetLength(0)/*InverseMatrix.RowCount*/; i++)
+            {
+                InverseMatrix.Rows.Add();
+                for (int j = 0; j < correlationMat.GetLength(1)/*InverseMatrix.ColumnCount*/; j++)
+                {
+                    
+                    InverseMatrix.Rows[i].Cells[j].Value = ober[i, j];
+                    rez[i, j] = ober[i, j];
+                }
+            }
+            /*
+            //Коефіцієнти фішера
+            
+            double[] fisher = new double[rez.GetLength(0)];
+            for (int i = 0; i < InverseMatrix.RowCount - 1; i++)
+            {
+                fisher[i] = (ober[i, i] - 1) * (sumRow - rez.GetLength(0)) / (rez.GetLength(0) - 1);
+            }
+            for (int i = 0; i < InverseMatrix.RowCount-1; i++)
+            {
+                //textBox5.Text += Convert.ToString(Math.Round(fisher[i], 2)) + "\r\n";
+                label7.Text += InverseMatrix.Columns[i].HeaderText + "\r\n";
+            }
+            bool check = false;
+            for (int i = 0; i < InverseMatrix.RowCount-1; i++)
+            {
+                if (fisher[i] > fish)
+                {
+                    //textBox1.Text += InverseMatrix.Columns[i].HeaderText + "  - незалежна змінна, що мультиколінеарна з іншими. \r\n";
+                    //button4.Enabled = true;
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                MessageBox.Show("Аналіз завершено. Мультиколінеарності неіснує!");
+            }
+        //}
+        //
+        //private void button4_Click(object sender, EventArgs e)
+        //{
+            textBox1.Text = " ";
+            double[,] matrparkoef = new double[rez.GetLength(0), rez.GetLength(1)];
+            //label8.Text = "Матриця частинних коефіцієнтів кореляції";
+            for (int i = 0; i < InverseMatrix.RowCount-1; i++)
+            {
+                for (int j = 0; j < InverseMatrix.ColumnCount; j++)
+                {
+                    matrparkoef[i, j] = -rez[i, j] / (Math.Sqrt(rez[i, i] * rez[j, j]));
+                    InverseMatrix.Rows[i].Cells[j].Value = matrparkoef[i, j];
+                }
+            }
+            //System.Threading.Thread.Sleep(3000);
+            double[,] krst = new double[rez.GetLength(0), rez.GetLength(1)];
+            //label8.Text = "Матриця критеріїв Стьюдента";
+            const double st = 2.093;
+
+            for (int i = 0; i < Student.RowCount; i++)
+            {
+                for (int j = 0; j < Student.ColumnCount; j++)
+                {
+                    Student.Rows[i].Cells[j].Value = " ";
+                }
+            }
+
+            for (int i = 0; i < Student.RowCount; i++)
+            {
+                for (int j = 0; j < Student.ColumnCount; j++)
+                {
+                    if (j > i)
+                    {
+                        krst[i, j] = matrparkoef[i, j] * Math.Sqrt(sumRow - rez.GetLength(0) - 1) / Math.Sqrt(1 - matrparkoef[i, j] * matrparkoef[i, j]);
+                        Student.Rows[i].Cells[j].Value = krst[i, j];
+                        if (krst[i, j] > st)
+                        {
+                            //Student.Rows[i].Cells[j].Style.BackColor = Color.DarkSeaGreen;
+                            //textBox1.Text += "Між незалежна змінними " + Student.Columns[i].HeaderText + " і " + Student.Columns[j].HeaderText + " існує мультиколінеарність. \r\n";
+                        }
+                    }
+
+                }
+            }
+            //button4.Enabled = false;
+
+    */
+        }
+    }
 }
+
 
 

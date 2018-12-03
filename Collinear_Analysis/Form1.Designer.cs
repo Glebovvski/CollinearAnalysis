@@ -45,12 +45,25 @@
             this.button3 = new System.Windows.Forms.Button();
             this.normDt = new System.Windows.Forms.DataGridView();
             this.label4 = new System.Windows.Forms.Label();
+            this.Det_Tb = new System.Windows.Forms.TextBox();
+            this.Xi_Tb = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.XiTable_Tb = new System.Windows.Forms.TextBox();
+            this.CompareXi = new System.Windows.Forms.Label();
+            this.InverseMatrix = new System.Windows.Forms.DataGridView();
+            this.label8 = new System.Windows.Forms.Label();
+            this.Student = new System.Windows.Forms.DataGridView();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.matr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.Collinear.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.normDt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.InverseMatrix)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Student)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -75,6 +88,7 @@
             this.matr.RowTemplate.Height = 24;
             this.matr.Size = new System.Drawing.Size(788, 238);
             this.matr.TabIndex = 4;
+            this.matr.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.matr_CellContentClick_1);
             // 
             // textBox2
             // 
@@ -184,6 +198,17 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label9);
+            this.tabPage2.Controls.Add(this.Student);
+            this.tabPage2.Controls.Add(this.label8);
+            this.tabPage2.Controls.Add(this.InverseMatrix);
+            this.tabPage2.Controls.Add(this.CompareXi);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.XiTable_Tb);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Controls.Add(this.label5);
+            this.tabPage2.Controls.Add(this.Xi_Tb);
+            this.tabPage2.Controls.Add(this.Det_Tb);
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.button3);
             this.tabPage2.Controls.Add(this.normDt);
@@ -197,7 +222,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(654, 65);
+            this.button3.Location = new System.Drawing.Point(623, 35);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 1;
@@ -224,6 +249,104 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "Normalized values";
             // 
+            // Det_Tb
+            // 
+            this.Det_Tb.Location = new System.Drawing.Point(623, 118);
+            this.Det_Tb.Name = "Det_Tb";
+            this.Det_Tb.Size = new System.Drawing.Size(100, 22);
+            this.Det_Tb.TabIndex = 3;
+            // 
+            // Xi_Tb
+            // 
+            this.Xi_Tb.Location = new System.Drawing.Point(758, 118);
+            this.Xi_Tb.Name = "Xi_Tb";
+            this.Xi_Tb.Size = new System.Drawing.Size(100, 22);
+            this.Xi_Tb.TabIndex = 4;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label5.Location = new System.Drawing.Point(618, 90);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(117, 25);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "Determinant";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label6.Location = new System.Drawing.Point(787, 90);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(30, 25);
+            this.label6.TabIndex = 6;
+            this.label6.Text = "Xi";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label7.Location = new System.Drawing.Point(898, 90);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(77, 25);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "Xi table";
+            // 
+            // XiTable_Tb
+            // 
+            this.XiTable_Tb.Location = new System.Drawing.Point(889, 118);
+            this.XiTable_Tb.Name = "XiTable_Tb";
+            this.XiTable_Tb.Size = new System.Drawing.Size(100, 22);
+            this.XiTable_Tb.TabIndex = 7;
+            // 
+            // CompareXi
+            // 
+            this.CompareXi.AutoSize = true;
+            this.CompareXi.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CompareXi.Location = new System.Drawing.Point(864, 118);
+            this.CompareXi.Name = "CompareXi";
+            this.CompareXi.Size = new System.Drawing.Size(0, 25);
+            this.CompareXi.TabIndex = 9;
+            // 
+            // InverseMatrix
+            // 
+            this.InverseMatrix.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.InverseMatrix.Location = new System.Drawing.Point(623, 175);
+            this.InverseMatrix.Name = "InverseMatrix";
+            this.InverseMatrix.RowTemplate.Height = 24;
+            this.InverseMatrix.Size = new System.Drawing.Size(471, 178);
+            this.InverseMatrix.TabIndex = 10;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label8.Location = new System.Drawing.Point(787, 147);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(134, 25);
+            this.label8.TabIndex = 11;
+            this.label8.Text = "Inverse Matrix";
+            // 
+            // Student
+            // 
+            this.Student.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Student.Location = new System.Drawing.Point(623, 390);
+            this.Student.Name = "Student";
+            this.Student.RowTemplate.Height = 24;
+            this.Student.Size = new System.Drawing.Size(471, 178);
+            this.Student.TabIndex = 12;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label9.Location = new System.Drawing.Point(787, 362);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(142, 25);
+            this.label9.TabIndex = 13;
+            this.label9.Text = "Student\'s t-test";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -240,6 +363,8 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.normDt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.InverseMatrix)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Student)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -261,6 +386,17 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.DataGridView normDt;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox Xi_Tb;
+        private System.Windows.Forms.TextBox Det_Tb;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox XiTable_Tb;
+        private System.Windows.Forms.Label CompareXi;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.DataGridView InverseMatrix;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.DataGridView Student;
     }
 }
 
