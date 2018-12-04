@@ -498,7 +498,7 @@ namespace Collinear_Analysis
                     rez[i, j] = ober[i, j];
                 }
             }
-            /*
+
             //Коефіцієнти фішера
             
             double[] fisher = new double[rez.GetLength(0)];
@@ -509,7 +509,7 @@ namespace Collinear_Analysis
             for (int i = 0; i < InverseMatrix.RowCount-1; i++)
             {
                 //textBox5.Text += Convert.ToString(Math.Round(fisher[i], 2)) + "\r\n";
-                label7.Text += InverseMatrix.Columns[i].HeaderText + "\r\n";
+                //label7.Text += InverseMatrix.Columns[i].HeaderText + "\r\n";
             }
             bool check = false;
             for (int i = 0; i < InverseMatrix.RowCount-1; i++)
@@ -529,21 +529,26 @@ namespace Collinear_Analysis
         //
         //private void button4_Click(object sender, EventArgs e)
         //{
-            textBox1.Text = " ";
+            //textBox1.Text = " ";
             double[,] matrparkoef = new double[rez.GetLength(0), rez.GetLength(1)];
             //label8.Text = "Матриця частинних коефіцієнтів кореляції";
             for (int i = 0; i < InverseMatrix.RowCount-1; i++)
             {
                 for (int j = 0; j < InverseMatrix.ColumnCount; j++)
                 {
+                    if (i == 0)
+                    {
+                        Student.Columns.Add("col" + j, dt.Columns[j].HeaderText);
+                    }
                     matrparkoef[i, j] = -rez[i, j] / (Math.Sqrt(rez[i, i] * rez[j, j]));
-                    InverseMatrix.Rows[i].Cells[j].Value = matrparkoef[i, j];
+                    Student.Rows.Add(matrparkoef[i, j]);
+                    //Student.Rows[i].Cells[j].Value = matrparkoef[i, j];
                 }
             }
             //System.Threading.Thread.Sleep(3000);
             double[,] krst = new double[rez.GetLength(0), rez.GetLength(1)];
             //label8.Text = "Матриця критеріїв Стьюдента";
-            const double st = 2.093;
+            const double st = 2.08596;
 
             for (int i = 0; i < Student.RowCount; i++)
             {
@@ -559,7 +564,7 @@ namespace Collinear_Analysis
                 {
                     if (j > i)
                     {
-                        krst[i, j] = matrparkoef[i, j] * Math.Sqrt(sumRow - rez.GetLength(0) - 1) / Math.Sqrt(1 - matrparkoef[i, j] * matrparkoef[i, j]);
+                        krst[i, j] = matrparkoef[i, j] * Math.Sqrt(sumRow - rez.GetLength(0)) / Math.Sqrt(1 - matrparkoef[i, j] * matrparkoef[i, j]);
                         Student.Rows[i].Cells[j].Value = krst[i, j];
                         if (krst[i, j] > st)
                         {
@@ -571,8 +576,6 @@ namespace Collinear_Analysis
                 }
             }
             //button4.Enabled = false;
-
-    */
         }
     }
 }
