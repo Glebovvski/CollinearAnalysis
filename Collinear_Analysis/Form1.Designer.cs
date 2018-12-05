@@ -75,6 +75,10 @@
             this.Partial = new System.Windows.Forms.DataGridView();
             this.StudentAnalysisTb = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.InverseReg = new System.Windows.Forms.DataGridView();
+            this.transp = new System.Windows.Forms.DataGridView();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.matr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -84,6 +88,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.InverseMatrix)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.normDt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Partial)).BeginInit();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.InverseReg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.transp)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -189,6 +196,7 @@
             // 
             this.tabControl1.Controls.Add(this.Collinear);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -549,6 +557,47 @@
             this.label14.TabIndex = 32;
             this.label14.Text = "Analysis";
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.button4);
+            this.tabPage1.Controls.Add(this.transp);
+            this.tabPage1.Controls.Add(this.InverseReg);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(1382, 712);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Regression analysis";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // InverseReg
+            // 
+            this.InverseReg.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.InverseReg.Location = new System.Drawing.Point(3, 36);
+            this.InverseReg.Name = "InverseReg";
+            this.InverseReg.RowTemplate.Height = 24;
+            this.InverseReg.Size = new System.Drawing.Size(434, 668);
+            this.InverseReg.TabIndex = 0;
+            // 
+            // transp
+            // 
+            this.transp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.transp.Location = new System.Drawing.Point(452, 36);
+            this.transp.Name = "transp";
+            this.transp.RowTemplate.Height = 24;
+            this.transp.Size = new System.Drawing.Size(922, 207);
+            this.transp.TabIndex = 1;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(476, 284);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 2;
+            this.button4.Text = "Transp";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -568,6 +617,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.InverseMatrix)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.normDt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Partial)).EndInit();
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.InverseReg)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.transp)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -619,6 +671,10 @@
         private System.Windows.Forms.DataGridView Partial;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox StudentAnalysisTb;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.DataGridView InverseReg;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.DataGridView transp;
     }
 }
 

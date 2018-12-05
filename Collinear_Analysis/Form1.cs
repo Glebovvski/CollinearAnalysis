@@ -9,6 +9,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
+using Data = System.Collections.Generic.KeyValuePair<int, int>;
 
 namespace Collinear_Analysis
 {
@@ -23,6 +24,9 @@ namespace Collinear_Analysis
         double max = 0;
         int mini = 0, minj = 0;
         int maxi = 0, maxj = 0;
+
+
+        double[,] matrs;
 
         public Form1()
         {
@@ -131,7 +135,6 @@ namespace Collinear_Analysis
         {
             int i = 0;
             int j = 0;
-            double[,] matrs;
             matrs = new double[dt.RowCount, dt.ColumnCount];
 
             //Input values from stats
@@ -326,7 +329,7 @@ namespace Collinear_Analysis
 
             const double xitable = 3.9403;
             XiTable_Tb.Text = xitable.ToString();
-            double det = DetGauss(rez);
+            double det = Math.Round(DetGauss(rez),2);
             Det_Tb.Text = det.ToString();
             double xi = -(sumRow - 1 - (2*5 +5)/5) * Math.Log(det, Math.E);
             Xi_Tb.Text = xi.ToString();
@@ -480,6 +483,7 @@ namespace Collinear_Analysis
             return ob;
         }
 
+        
 
         private bool Fisher(double[,] ober)
         {
@@ -580,12 +584,11 @@ namespace Collinear_Analysis
                         Student.Rows.Add();
                     if (j > i)
                     {
-                        if (j == 0)
-                            Student.Rows.Add();
                         krst[i, j] = matrparkoef[i, j] * Math.Sqrt(sumRow - rez.GetLength(0)) / Math.Sqrt(1 - matrparkoef[i, j] * matrparkoef[i, j]);
                         Student.Rows[i].Cells[j].Value = krst[i, j];
                         if (krst[i, j] > st)
                         {
+                            dependants.Add(new Data(i, j));
                             Student.Rows[i].Cells[j].Style = styleMiddle;
                             StudentAnalysisTb.Text += "There is multicollinearity between independent variables: " + Student.Columns[i].HeaderText + " and " + Student.Columns[j].HeaderText + " \r\n";
                         }
@@ -593,6 +596,43 @@ namespace Collinear_Analysis
 
                 }
             }
+        }
+
+        List<Data> dependants = new List<Data>();
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //dependants.RemoveAt(2);
+            List<int> toThrowAway = new List<int>();
+            int checksThatExist = 0;
+            int checkThatNotMain = 0;
+            for (int i = 0; i < dependants.Count; i++)
+            {
+                if (dependants[i].Key == 0)
+                {
+                    int temp = dependants[i].Value;
+                    toThrowAway.Add(dependants[i].Value);
+                    foreach(var item in dependants)
+                    {
+                        if (toThrowAway.Count > 0)
+                        {
+                            if (temp != item.Value)
+                            {
+                                checksThatExist++;
+                            }
+                            if(temp == item.Value && item.Key == 0)
+                            {
+                                checkThatNotMain++;
+                            }
+                        }
+                    }
+                    if (checksThatExist == dependants.Count-1 /*&& checksThatExist>=checkThatNotMain*/)
+                        toThrowAway.Remove(temp);
+                    checksThatExist = 0;
+                }
+            }
+            
+            //var sd = matrs;
+
         }
     }
 }
