@@ -42,6 +42,15 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Collinear = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
+            this.StudentAnalysisTb = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.Partial = new System.Windows.Forms.DataGridView();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.FisherTB = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.StudentTb = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.Student = new System.Windows.Forms.DataGridView();
             this.label8 = new System.Windows.Forms.Label();
@@ -56,41 +65,23 @@
             this.label4 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.normDt = new System.Windows.Forms.DataGridView();
-            this.label10 = new System.Windows.Forms.Label();
-            this.StudentTb = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.FisherTB = new System.Windows.Forms.TextBox();
-            this.Fisher1 = new System.Windows.Forms.Label();
-            this.Fisher2 = new System.Windows.Forms.Label();
-            this.Fisher3 = new System.Windows.Forms.Label();
-            this.Fisher4 = new System.Windows.Forms.Label();
-            this.Fisher5 = new System.Windows.Forms.Label();
-            this.Fisher1_tb = new System.Windows.Forms.TextBox();
-            this.Fisher2_tb = new System.Windows.Forms.TextBox();
-            this.Fisher3_tb = new System.Windows.Forms.TextBox();
-            this.Fisher4_tb = new System.Windows.Forms.TextBox();
-            this.Fisher5_tb = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.Partial = new System.Windows.Forms.DataGridView();
-            this.StudentAnalysisTb = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.InverseReg = new System.Windows.Forms.DataGridView();
-            this.transp = new System.Windows.Forms.DataGridView();
             this.button4 = new System.Windows.Forms.Button();
+            this.transp = new System.Windows.Forms.DataGridView();
+            this.InverseReg = new System.Windows.Forms.DataGridView();
+            this.Fishers_Tb = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.matr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.Collinear.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Partial)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Student)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.InverseMatrix)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.normDt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Partial)).BeginInit();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.InverseReg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.InverseReg)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -157,10 +148,15 @@
             // 
             // dt
             // 
+            this.dt.AllowUserToAddRows = false;
+            this.dt.AllowUserToDeleteRows = false;
             this.dt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dt.Location = new System.Drawing.Point(19, 36);
             this.dt.Name = "dt";
+            this.dt.ReadOnly = true;
             this.dt.RowTemplate.Height = 24;
+            this.dt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dt.ShowEditingIcon = false;
             this.dt.Size = new System.Drawing.Size(540, 642);
             this.dt.TabIndex = 0;
             this.dt.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dt_CellContentClick);
@@ -227,20 +223,11 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.label14);
+            this.tabPage2.Controls.Add(this.Fishers_Tb);
             this.tabPage2.Controls.Add(this.StudentAnalysisTb);
             this.tabPage2.Controls.Add(this.label13);
             this.tabPage2.Controls.Add(this.Partial);
             this.tabPage2.Controls.Add(this.label12);
-            this.tabPage2.Controls.Add(this.Fisher5_tb);
-            this.tabPage2.Controls.Add(this.Fisher4_tb);
-            this.tabPage2.Controls.Add(this.Fisher3_tb);
-            this.tabPage2.Controls.Add(this.Fisher2_tb);
-            this.tabPage2.Controls.Add(this.Fisher1_tb);
-            this.tabPage2.Controls.Add(this.Fisher5);
-            this.tabPage2.Controls.Add(this.Fisher4);
-            this.tabPage2.Controls.Add(this.Fisher3);
-            this.tabPage2.Controls.Add(this.Fisher2);
-            this.tabPage2.Controls.Add(this.Fisher1);
             this.tabPage2.Controls.Add(this.label11);
             this.tabPage2.Controls.Add(this.FisherTB);
             this.tabPage2.Controls.Add(this.label10);
@@ -267,6 +254,87 @@
             this.tabPage2.Text = "Multilollinear analysis";
             this.tabPage2.UseVisualStyleBackColor = true;
             this.tabPage2.Click += new System.EventHandler(this.tabPage2_Click);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label14.Location = new System.Drawing.Point(1182, 383);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(101, 29);
+            this.label14.TabIndex = 32;
+            this.label14.Text = "Analysis";
+            // 
+            // StudentAnalysisTb
+            // 
+            this.StudentAnalysisTb.Location = new System.Drawing.Point(1092, 415);
+            this.StudentAnalysisTb.Multiline = true;
+            this.StudentAnalysisTb.Name = "StudentAnalysisTb";
+            this.StudentAnalysisTb.Size = new System.Drawing.Size(278, 253);
+            this.StudentAnalysisTb.TabIndex = 31;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label13.Location = new System.Drawing.Point(694, 284);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(166, 25);
+            this.label13.TabIndex = 30;
+            this.label13.Text = "partial coefficients";
+            // 
+            // Partial
+            // 
+            this.Partial.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Partial.Location = new System.Drawing.Point(508, 312);
+            this.Partial.Name = "Partial";
+            this.Partial.RowTemplate.Height = 24;
+            this.Partial.Size = new System.Drawing.Size(553, 178);
+            this.Partial.TabIndex = 29;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label12.Location = new System.Drawing.Point(1182, 63);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(188, 29);
+            this.label12.TabIndex = 28;
+            this.label12.Text = "Fisher\'s criterias";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label11.Location = new System.Drawing.Point(1020, 10);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(119, 25);
+            this.label11.TabIndex = 17;
+            this.label11.Text = "Fisher factor";
+            // 
+            // FisherTB
+            // 
+            this.FisherTB.Location = new System.Drawing.Point(1025, 38);
+            this.FisherTB.Name = "FisherTB";
+            this.FisherTB.Size = new System.Drawing.Size(115, 22);
+            this.FisherTB.TabIndex = 16;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label10.Location = new System.Drawing.Point(881, 10);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(133, 25);
+            this.label10.TabIndex = 15;
+            this.label10.Text = "Student factor";
+            // 
+            // StudentTb
+            // 
+            this.StudentTb.Location = new System.Drawing.Point(886, 38);
+            this.StudentTb.Name = "StudentTb";
+            this.StudentTb.Size = new System.Drawing.Size(115, 22);
+            this.StudentTb.TabIndex = 14;
             // 
             // label9
             // 
@@ -396,167 +464,6 @@
             this.normDt.Size = new System.Drawing.Size(459, 674);
             this.normDt.TabIndex = 0;
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label10.Location = new System.Drawing.Point(881, 10);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(133, 25);
-            this.label10.TabIndex = 15;
-            this.label10.Text = "Student factor";
-            // 
-            // StudentTb
-            // 
-            this.StudentTb.Location = new System.Drawing.Point(886, 38);
-            this.StudentTb.Name = "StudentTb";
-            this.StudentTb.Size = new System.Drawing.Size(115, 22);
-            this.StudentTb.TabIndex = 14;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label11.Location = new System.Drawing.Point(1020, 10);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(119, 25);
-            this.label11.TabIndex = 17;
-            this.label11.Text = "Fisher factor";
-            // 
-            // FisherTB
-            // 
-            this.FisherTB.Location = new System.Drawing.Point(1025, 38);
-            this.FisherTB.Name = "FisherTB";
-            this.FisherTB.Size = new System.Drawing.Size(115, 22);
-            this.FisherTB.TabIndex = 16;
-            // 
-            // Fisher1
-            // 
-            this.Fisher1.AutoSize = true;
-            this.Fisher1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Fisher1.Location = new System.Drawing.Point(1165, 91);
-            this.Fisher1.Name = "Fisher1";
-            this.Fisher1.Size = new System.Drawing.Size(0, 25);
-            this.Fisher1.TabIndex = 18;
-            // 
-            // Fisher2
-            // 
-            this.Fisher2.AutoSize = true;
-            this.Fisher2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Fisher2.Location = new System.Drawing.Point(1165, 141);
-            this.Fisher2.Name = "Fisher2";
-            this.Fisher2.Size = new System.Drawing.Size(0, 25);
-            this.Fisher2.TabIndex = 19;
-            // 
-            // Fisher3
-            // 
-            this.Fisher3.AutoSize = true;
-            this.Fisher3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Fisher3.Location = new System.Drawing.Point(1165, 188);
-            this.Fisher3.Name = "Fisher3";
-            this.Fisher3.Size = new System.Drawing.Size(0, 25);
-            this.Fisher3.TabIndex = 20;
-            // 
-            // Fisher4
-            // 
-            this.Fisher4.AutoSize = true;
-            this.Fisher4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Fisher4.Location = new System.Drawing.Point(1165, 234);
-            this.Fisher4.Name = "Fisher4";
-            this.Fisher4.Size = new System.Drawing.Size(0, 25);
-            this.Fisher4.TabIndex = 21;
-            // 
-            // Fisher5
-            // 
-            this.Fisher5.AutoSize = true;
-            this.Fisher5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Fisher5.Location = new System.Drawing.Point(1165, 278);
-            this.Fisher5.Name = "Fisher5";
-            this.Fisher5.Size = new System.Drawing.Size(0, 25);
-            this.Fisher5.TabIndex = 22;
-            // 
-            // Fisher1_tb
-            // 
-            this.Fisher1_tb.Location = new System.Drawing.Point(1270, 95);
-            this.Fisher1_tb.Name = "Fisher1_tb";
-            this.Fisher1_tb.Size = new System.Drawing.Size(100, 22);
-            this.Fisher1_tb.TabIndex = 23;
-            // 
-            // Fisher2_tb
-            // 
-            this.Fisher2_tb.Location = new System.Drawing.Point(1270, 146);
-            this.Fisher2_tb.Name = "Fisher2_tb";
-            this.Fisher2_tb.Size = new System.Drawing.Size(100, 22);
-            this.Fisher2_tb.TabIndex = 24;
-            // 
-            // Fisher3_tb
-            // 
-            this.Fisher3_tb.Location = new System.Drawing.Point(1270, 193);
-            this.Fisher3_tb.Name = "Fisher3_tb";
-            this.Fisher3_tb.Size = new System.Drawing.Size(100, 22);
-            this.Fisher3_tb.TabIndex = 25;
-            // 
-            // Fisher4_tb
-            // 
-            this.Fisher4_tb.Location = new System.Drawing.Point(1270, 239);
-            this.Fisher4_tb.Name = "Fisher4_tb";
-            this.Fisher4_tb.Size = new System.Drawing.Size(100, 22);
-            this.Fisher4_tb.TabIndex = 26;
-            // 
-            // Fisher5_tb
-            // 
-            this.Fisher5_tb.Location = new System.Drawing.Point(1270, 283);
-            this.Fisher5_tb.Name = "Fisher5_tb";
-            this.Fisher5_tb.Size = new System.Drawing.Size(100, 22);
-            this.Fisher5_tb.TabIndex = 27;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label12.Location = new System.Drawing.Point(1182, 38);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(188, 29);
-            this.label12.TabIndex = 28;
-            this.label12.Text = "Fisher\'s criterias";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label13.Location = new System.Drawing.Point(694, 284);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(166, 25);
-            this.label13.TabIndex = 30;
-            this.label13.Text = "partial coefficients";
-            // 
-            // Partial
-            // 
-            this.Partial.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Partial.Location = new System.Drawing.Point(508, 312);
-            this.Partial.Name = "Partial";
-            this.Partial.RowTemplate.Height = 24;
-            this.Partial.Size = new System.Drawing.Size(553, 178);
-            this.Partial.TabIndex = 29;
-            // 
-            // StudentAnalysisTb
-            // 
-            this.StudentAnalysisTb.Location = new System.Drawing.Point(1092, 415);
-            this.StudentAnalysisTb.Multiline = true;
-            this.StudentAnalysisTb.Name = "StudentAnalysisTb";
-            this.StudentAnalysisTb.Size = new System.Drawing.Size(278, 253);
-            this.StudentAnalysisTb.TabIndex = 31;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label14.Location = new System.Drawing.Point(1182, 383);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(101, 29);
-            this.label14.TabIndex = 32;
-            this.label14.Text = "Analysis";
-            // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.button4);
@@ -570,14 +477,15 @@
             this.tabPage1.Text = "Regression analysis";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // InverseReg
+            // button4
             // 
-            this.InverseReg.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.InverseReg.Location = new System.Drawing.Point(3, 36);
-            this.InverseReg.Name = "InverseReg";
-            this.InverseReg.RowTemplate.Height = 24;
-            this.InverseReg.Size = new System.Drawing.Size(434, 668);
-            this.InverseReg.TabIndex = 0;
+            this.button4.Location = new System.Drawing.Point(476, 284);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 2;
+            this.button4.Text = "Transp";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // transp
             // 
@@ -588,15 +496,22 @@
             this.transp.Size = new System.Drawing.Size(922, 207);
             this.transp.TabIndex = 1;
             // 
-            // button4
+            // InverseReg
             // 
-            this.button4.Location = new System.Drawing.Point(476, 284);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 2;
-            this.button4.Text = "Transp";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.InverseReg.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.InverseReg.Location = new System.Drawing.Point(3, 36);
+            this.InverseReg.Name = "InverseReg";
+            this.InverseReg.RowTemplate.Height = 24;
+            this.InverseReg.Size = new System.Drawing.Size(434, 668);
+            this.InverseReg.TabIndex = 0;
+            // 
+            // Fishers_Tb
+            // 
+            this.Fishers_Tb.Location = new System.Drawing.Point(1092, 95);
+            this.Fishers_Tb.Multiline = true;
+            this.Fishers_Tb.Name = "Fishers_Tb";
+            this.Fishers_Tb.Size = new System.Drawing.Size(278, 285);
+            this.Fishers_Tb.TabIndex = 31;
             // 
             // Form1
             // 
@@ -613,13 +528,13 @@
             this.Collinear.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Partial)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Student)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.InverseMatrix)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.normDt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Partial)).EndInit();
             this.tabPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.InverseReg)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.transp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.InverseReg)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -652,16 +567,6 @@
         private System.Windows.Forms.DataGridView InverseMatrix;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.DataGridView Student;
-        private System.Windows.Forms.TextBox Fisher5_tb;
-        private System.Windows.Forms.TextBox Fisher4_tb;
-        private System.Windows.Forms.TextBox Fisher3_tb;
-        private System.Windows.Forms.TextBox Fisher2_tb;
-        private System.Windows.Forms.TextBox Fisher1_tb;
-        private System.Windows.Forms.Label Fisher5;
-        private System.Windows.Forms.Label Fisher4;
-        private System.Windows.Forms.Label Fisher3;
-        private System.Windows.Forms.Label Fisher2;
-        private System.Windows.Forms.Label Fisher1;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox FisherTB;
         private System.Windows.Forms.Label label10;
@@ -675,6 +580,7 @@
         private System.Windows.Forms.DataGridView InverseReg;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.DataGridView transp;
+        private System.Windows.Forms.TextBox Fishers_Tb;
     }
 }
 

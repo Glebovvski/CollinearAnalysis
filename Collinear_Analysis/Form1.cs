@@ -19,7 +19,7 @@ namespace Collinear_Analysis
         double[,] rez;
         int sumRow = 0;
 
-        double[,] correlationMat = new double[5, 5];
+        double[,] correlationMat;// = new double[5, 5];
 
         double min = 0;
         double max = 0;
@@ -127,7 +127,13 @@ namespace Collinear_Analysis
                 OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT * FROM [Лист1$]", connection);
                 DataTable table = new DataTable();
                 adapter.Fill(table);
+                //dt.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dt.DataSource = table;
+                foreach (DataGridViewColumn item in dt.Columns)
+                {
+                    item.SortMode = DataGridViewColumnSortMode.NotSortable;
+                }
+                dt.SelectionMode = DataGridViewSelectionMode.FullColumnSelect;
                 connection.Close();
             }
         }
@@ -136,16 +142,60 @@ namespace Collinear_Analysis
         {
             int i = 0;
             int j = 0;
-            matrs = new double[dt.RowCount-1, dt.ColumnCount-1];
+
+            int colCount = 0;
+            int rowCount = 0;
+
+            if (dt.SelectedCells.Count > 0)
+            {
+                matrs = new double[dt.RowCount, dt.SelectedColumns.Count];
+                colCount = dt.SelectedColumns.Count;
+                rowCount = dt.RowCount;
+            }
+            else
+            {
+                matrs = new double[dt.RowCount, dt.ColumnCount - 1];
+                colCount = dt.ColumnCount - 1;
+                rowCount = dt.RowCount;
+            }
+            
 
             //Input values from stats
-            for (i = 0; i < dt.RowCount-1; i++)
+            //with all columns
+            if (dt.SelectedColumns.Count == 0)
             {
-                for (j = 0; j < dt.ColumnCount-1; j++)
+                for (i = 0; i < rowCount; i++)
                 {
-                    matrs[i, j] = Convert.ToDouble(dt.Rows[i].Cells[j+1].Value);
+                    for (j = 0; j < colCount; j++)
+                    {
+                        //if(j!=0)
+                        matrs[i, j] = Convert.ToDouble(dt.Rows[i].Cells[j+1].Value);
+                    }
                 }
             }
+            //with selected columns
+            else
+            {
+                foreach (DataGridViewRow row in dt.Rows)
+                {
+                    foreach (DataGridViewCell cell in row.Cells)
+                    {
+                        if (cell.Selected)
+                        {
+                            matrs[i, j] = Convert.ToDouble(cell.Value);
+                            j++;
+                            if (j >= matrs.GetLength(1))
+                            {
+                                j = 0;
+                                i++;
+                            }
+                            if (j >= dt.SelectedColumns.Count) i++;
+                        }
+                    }
+                }
+            }
+
+            correlationMat = new double[colCount, colCount];
 
             double[,] x;
             double[,] y;
@@ -212,8 +262,8 @@ namespace Collinear_Analysis
                     correlationMat[l, k] = double.Parse(matr.Rows[l].Cells[k].Value.ToString());
                 }
 
-                matr.Columns[l].HeaderText = dt.Columns[l+1].HeaderText;
-                matr.Rows[l].HeaderCell.Value = dt.Columns[l+1].HeaderText;
+                matr.Columns[l].HeaderText = dt.Columns[l + 1].HeaderText;
+                matr.Rows[l].HeaderCell.Value = dt.Columns[l + 1].HeaderText;
 
             }
 
@@ -260,13 +310,13 @@ namespace Collinear_Analysis
             int i = 0;
             int j = 0;
             double[,] matrs;
-            matrs = new double[dt.RowCount - 1, dt.ColumnCount-1];
+            matrs = new double[dt.RowCount - 1, dt.ColumnCount - 1];
 
             for (i = 0; i < matrs.GetLength(0); i++)
             {
                 for (j = 0; j < matrs.GetLength(1); j++)
                 {
-                    matrs[i, j] = Convert.ToDouble(dt.Rows[i].Cells[j+1].Value);
+                    matrs[i, j] = Convert.ToDouble(dt.Rows[i].Cells[j + 1].Value);
                 }
             }
 
@@ -327,7 +377,7 @@ namespace Collinear_Analysis
                     rez[i, j] = Math.Round(Convert.ToDouble(matr.Rows[i].Cells[j].Value), 1);
                 }
             }
-            var xiii = Math.Round(invchisquaredistribution(matr.ColumnCount, 0.55),2);//chisquaredistribution(10, 0.05);
+            var xiii = Math.Round(invchisquaredistribution(matr.ColumnCount, 0.55), 2);//chisquaredistribution(10, 0.05);
             const double xitable = 3.9403;
             XiTable_Tb.Text = xiii.ToString();//xitable.ToString();
             double det = Math.Round(DetGauss(rez), 2);
@@ -474,7 +524,7 @@ namespace Collinear_Analysis
                         for (i1 = 0; i1 < len;)
                         {
                             matrix[i, i1] = matrix[i, i1] / arg_2;
-                            ob[i, i1] = Math.Round(ob[i, i1] / arg_2,2);
+                            ob[i, i1] = Math.Round(ob[i, i1] / arg_2, 2);
                             i1++;
                         }
                     }
@@ -498,21 +548,10 @@ namespace Collinear_Analysis
                 fisher[i] = Math.Round((ober[i, i] - 1) * (sumRow - rez.GetLength(0)) / (rez.GetLength(0) - 1), 2);
             }
 
-            Fisher1.Text = InverseMatrix.Columns[0].HeaderText;
-            Fisher1_tb.Text = fisher[0].ToString();
-            if (fisher[0] > fish) Fisher1_tb.BackColor = Color.Blue;
-            Fisher2.Text = InverseMatrix.Columns[1].HeaderText;
-            Fisher2_tb.Text = fisher[1].ToString();
-            if (fisher[1] > fish) Fisher2_tb.BackColor = Color.Blue;
-            Fisher3.Text = InverseMatrix.Columns[2].HeaderText;
-            Fisher3_tb.Text = fisher[2].ToString();
-            if (fisher[2] > fish) Fisher3_tb.BackColor = Color.Blue;
-            Fisher4.Text = InverseMatrix.Columns[3].HeaderText;
-            Fisher4_tb.Text = fisher[3].ToString();
-            if (fisher[3] > fish) Fisher4_tb.BackColor = Color.Blue;
-            Fisher5.Text = InverseMatrix.Columns[4].HeaderText;
-            Fisher5_tb.Text = fisher[4].ToString();
-            if (fisher[4] > fish) Fisher5_tb.BackColor = Color.Blue;
+            for (int i = 0; i < fisher.Length; i++)
+            {
+                Fishers_Tb.Text += InverseMatrix.Columns[i].HeaderText + ": " + fisher[i] + "\r\n";
+            }
 
             for (int i = 0; i < InverseMatrix.RowCount - 1; i++)
             {
@@ -525,21 +564,23 @@ namespace Collinear_Analysis
 
         private void StudentFunc()
         {
-            textBox1.Text = " ";
             //Обернена матриця
             double[,] ober = Inversing(correlationMat, correlationMat.GetLength(0));
 
-            InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[1].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
-            InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[2].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
-            InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[3].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
-            InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[4].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
-            InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[5].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
+            //InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[1].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
+            //InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[2].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
+            //InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[3].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
+            //InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[4].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
+            //InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[5].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
 
             for (int i = 0; i < correlationMat.GetLength(0); i++)
             {
-                InverseMatrix.Rows.Add();
                 for (int j = 0; j < correlationMat.GetLength(1); j++)
                 {
+                    if (i == 0)
+                        InverseMatrix.Columns.Add("col",dt.Columns[j+1].HeaderText);
+                    if (j == 0)
+                        InverseMatrix.Rows.Add();
                     InverseMatrix.Rows[i].Cells[j].Value = ober[i, j];
                     rez[i, j] = ober[i, j];
                 }
@@ -559,7 +600,7 @@ namespace Collinear_Analysis
                 {
                     if (i == 0)
                     {
-                        Partial.Columns.Add("col" + j, dt.Columns[j+1].HeaderText);
+                        Partial.Columns.Add("col" + j, dt.Columns[j + 1].HeaderText);
                     }
                     matrparkoef[i, j] = Math.Round(-rez[i, j] / (Math.Sqrt(rez[i, i] * rez[j, j])), 2);
                     if (j == 0) Partial.Rows.Add();
@@ -575,12 +616,12 @@ namespace Collinear_Analysis
             DataGridViewCellStyle styleMiddle = new DataGridViewCellStyle();
             styleMiddle.BackColor = System.Drawing.Color.Orange;
 
-            for (int i = 0; i < Partial.RowCount-1; i++)
+            for (int i = 0; i < Partial.RowCount - 1; i++)
             {
                 for (int j = 0; j < Partial.ColumnCount; j++)
                 {
                     if (i == 0)
-                        Student.Columns.Add("col" + j, dt.Columns[j+1].HeaderText);
+                        Student.Columns.Add("col" + j, dt.Columns[j + 1].HeaderText);
                     if (j == 0)
                         Student.Rows.Add();
                     if (j > i)
@@ -639,11 +680,11 @@ namespace Collinear_Analysis
         private void RegressionAnalysis(List<int> toThrowAway)
         {
             List<double[,]> matrixList = new List<double[,]>();
-            double[,] yMat = new double[1, dt.RowCount-1];
-            double[,] x1Mat = new double[1, dt.RowCount-1];
-            double[,] x2Mat = new double[1, dt.RowCount-1];
-            double[,] x3Mat = new double[1, dt.RowCount-1];
-            double[,] x4Mat = new double[1, dt.RowCount-1];
+            double[,] yMat = new double[1, dt.RowCount - 1];
+            double[,] x1Mat = new double[1, dt.RowCount - 1];
+            double[,] x2Mat = new double[1, dt.RowCount - 1];
+            double[,] x3Mat = new double[1, dt.RowCount - 1];
+            double[,] x4Mat = new double[1, dt.RowCount - 1];
             int i = 0;
             int j0 = 0, j1 = 0, j2 = 0, j3 = 0, j4 = 0;
 
@@ -655,7 +696,7 @@ namespace Collinear_Analysis
                     {
                         if (cell.ColumnIndex == 0)
                         {
-                            if (j0 != dt.Rows.Count-1)
+                            if (j0 != dt.Rows.Count - 1)
                             {
                                 yMat[0, j0] = double.Parse(cell.Value.ToString());
                                 j0++;
@@ -663,7 +704,7 @@ namespace Collinear_Analysis
                         }
                         if (cell.ColumnIndex == 1 && !toThrowAway.Contains(i))
                         {
-                            if (j1 != dt.Rows.Count-1)
+                            if (j1 != dt.Rows.Count - 1)
                             {
                                 x1Mat[0, j1] = double.Parse(cell.Value.ToString());
                                 j1++;
@@ -671,7 +712,7 @@ namespace Collinear_Analysis
                         }
                         if (cell.ColumnIndex == 2 && !toThrowAway.Contains(i))
                         {
-                            if (j2 != dt.Rows.Count-1)
+                            if (j2 != dt.Rows.Count - 1)
                             {
                                 x2Mat[0, j2] = double.Parse(cell.Value.ToString());
                                 j2++;
@@ -679,7 +720,7 @@ namespace Collinear_Analysis
                         }
                         if (cell.ColumnIndex == 3 && !toThrowAway.Contains(i))
                         {
-                            if (j3 != dt.Rows.Count-1)
+                            if (j3 != dt.Rows.Count - 1)
                             {
                                 x3Mat[0, j3] = double.Parse(cell.Value.ToString());
                                 j3++;
@@ -687,7 +728,7 @@ namespace Collinear_Analysis
                         }
                         if (cell.ColumnIndex == 4 && !toThrowAway.Contains(i))
                         {
-                            if (j4 != dt.Rows.Count-1)
+                            if (j4 != dt.Rows.Count - 1)
                             {
                                 x4Mat[0, j4] = double.Parse(cell.Value.ToString());
                                 j4++;
@@ -704,7 +745,7 @@ namespace Collinear_Analysis
             matrixList.Add(x2Mat);
             matrixList.Add(x3Mat);
             matrixList.Add(x4Mat);
-            
+
             //Xt*X
             double[,] x1Mult = Multiplication(Transposition(x1Mat), x1Mat);
             double[,] x2Mult = Multiplication(Transposition(x2Mat), x2Mat);
@@ -730,6 +771,13 @@ namespace Collinear_Analysis
             var b4 = Multiplication(x4, yMat);
 
             //var beta1 =PearsonCorrelation.GetSimilarityScore(rez, rez);
+        }
+
+        private void dt_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
+        {
+            e.Column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            dt.SelectionMode = DataGridViewSelectionMode.FullColumnSelect;
+            dt.MultiSelect = true;
         }
 
         private static double[,] Transposition(double[,] matr)
