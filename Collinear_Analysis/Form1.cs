@@ -168,7 +168,6 @@ namespace Collinear_Analysis
                 {
                     for (j = 0; j < colCount; j++)
                     {
-                        //if(j!=0)
                         matrs[i, j] = Convert.ToDouble(dt.Rows[i].Cells[j+1].Value);
                     }
                 }
@@ -524,7 +523,7 @@ namespace Collinear_Analysis
                         for (i1 = 0; i1 < len;)
                         {
                             matrix[i, i1] = matrix[i, i1] / arg_2;
-                            ob[i, i1] = Math.Round(ob[i, i1] / arg_2, 2);
+                            ob[i, i1] = ob[i, i1] / arg_2;
                             i1++;
                         }
                     }
@@ -566,13 +565,7 @@ namespace Collinear_Analysis
         {
             //Обернена матриця
             double[,] ober = Inversing(correlationMat, correlationMat.GetLength(0));
-
-            //InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[1].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
-            //InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[2].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
-            //InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[3].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
-            //InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[4].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
-            //InverseMatrix.Columns.Add(new DataGridViewColumn() { HeaderText = dt.Columns[5].HeaderText, CellTemplate = new DataGridViewTextBoxCell() });
-
+            
             for (int i = 0; i < correlationMat.GetLength(0); i++)
             {
                 for (int j = 0; j < correlationMat.GetLength(1); j++)
@@ -609,8 +602,8 @@ namespace Collinear_Analysis
             }
 
             double[,] krst = new double[rez.GetLength(0), rez.GetLength(1)];
-            //label8.Text = "Матриця критеріїв Стьюдента";
             const double st = 2.08596;
+            double stud = StudentTest(0.05, 25);//studenttdistribution(25, 0.5);
             StudentTb.Text = st.ToString();
 
             DataGridViewCellStyle styleMiddle = new DataGridViewCellStyle();
@@ -673,111 +666,124 @@ namespace Collinear_Analysis
                 }
             }
 
-            //var sd = matrs;
+            toThrowAway = toThrowAway.Distinct().ToList();
             RegressionAnalysis(toThrowAway);
         }
 
         private void RegressionAnalysis(List<int> toThrowAway)
         {
-            List<double[,]> matrixList = new List<double[,]>();
-            double[,] yMat = new double[1, dt.RowCount - 1];
-            double[,] x1Mat = new double[1, dt.RowCount - 1];
-            double[,] x2Mat = new double[1, dt.RowCount - 1];
-            double[,] x3Mat = new double[1, dt.RowCount - 1];
-            double[,] x4Mat = new double[1, dt.RowCount - 1];
-            int i = 0;
-            int j0 = 0, j1 = 0, j2 = 0, j3 = 0, j4 = 0;
-
-            foreach (DataGridViewRow item in dt.Rows)
+            double[][] result = new double[dt.RowCount][];
+            
+            for (int i = 0; i < dt.RowCount; i++)
             {
-                foreach (DataGridViewCell cell in item.Cells)
+                if (toThrowAway.Count == 0 && dt.SelectedColumns.Count == 0)
+                    result[i] = new double[dt.ColumnCount - 1];
+                else if (dt.SelectedColumns.Count > 0)
+                    result[i] = new double[dt.SelectedColumns.Count];
+                else if (toThrowAway.Count > 0)
+                    result[i] = new double[(dt.ColumnCount - 1) - toThrowAway.Count];
+            }
+
+            if (toThrowAway.Count == 0 && dt.SelectedColumns.Count == 0)
+            {
+                int n = dt.ColumnCount - 1;
+                for (int i = 0; i < dt.RowCount; ++i)
                 {
-                    if (cell.Value != null)
+                    for (int j = 0; j < n; j++)
                     {
-                        if (cell.ColumnIndex == 0)
+                        result[i][j] = double.Parse(dt.Rows[i].Cells[j + 1].Value.ToString());
+                    }
+                }
+            }
+            else if (toThrowAway.Count > 0)
+            {
+                int n = (dt.ColumnCount - 1) - toThrowAway.Count;
+                for (int i = 0; i < dt.RowCount; ++i)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        if (!toThrowAway.Contains(j))
                         {
-                            if (j0 != dt.Rows.Count - 1)
-                            {
-                                yMat[0, j0] = double.Parse(cell.Value.ToString());
-                                j0++;
-                            }
+                            result[i][j] = double.Parse(dt.Rows[i].Cells[j + 1].Value.ToString());
                         }
-                        if (cell.ColumnIndex == 1 && !toThrowAway.Contains(i))
+                    }
+                }
+            }
+            else if (dt.SelectedColumns.Count > 0)
+            {
+                int n = dt.SelectedColumns.Count;
+                int j1 = 0;
+                for (int i = 0; i < dt.RowCount; ++i)
+                {
+                    for (int j = 0; j < dt.Columns.Count; j++)
+                    {
+                        if (dt.Columns[j].Selected)
                         {
-                            if (j1 != dt.Rows.Count - 1)
-                            {
-                                x1Mat[0, j1] = double.Parse(cell.Value.ToString());
-                                j1++;
-                            }
+                            result[i][j1] = double.Parse(dt.Rows[i].Cells[j].Value.ToString());
+                            j1++;
+                            if (j1 >= n) j1 = 0;
                         }
-                        if (cell.ColumnIndex == 2 && !toThrowAway.Contains(i))
-                        {
-                            if (j2 != dt.Rows.Count - 1)
-                            {
-                                x2Mat[0, j2] = double.Parse(cell.Value.ToString());
-                                j2++;
-                            }
-                        }
-                        if (cell.ColumnIndex == 3 && !toThrowAway.Contains(i))
-                        {
-                            if (j3 != dt.Rows.Count - 1)
-                            {
-                                x3Mat[0, j3] = double.Parse(cell.Value.ToString());
-                                j3++;
-                            }
-                        }
-                        if (cell.ColumnIndex == 4 && !toThrowAway.Contains(i))
-                        {
-                            if (j4 != dt.Rows.Count - 1)
-                            {
-                                x4Mat[0, j4] = double.Parse(cell.Value.ToString());
-                                j4++;
-                            }
-                        }
-                        i++;
-                        if (i > dt.Columns.Count - 1)
-                            i = 0;
                     }
                 }
             }
 
-            matrixList.Add(x1Mat);
-            matrixList.Add(x2Mat);
-            matrixList.Add(x3Mat);
-            matrixList.Add(x4Mat);
+            double[][] design = Design(result);
 
+            var res = Solve(design);
+
+            double R2 = RSquared(result, res);
+            /*
+            List<double[,]> matrixList = new List<double[,]>();
+            double[,] yMat = new double[1, dt.RowCount];
+            double[,] x1Mat = new double[dt.ColumnCount - 2, dt.RowCount];
+
+            int i1 = 0;
+            int j0 = 0, j1 = 0, j2 = 0, j3 = 0, j4 = 0;
+            
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                for (int j = 0; j < dt.ColumnCount ; j++)
+                {
+                    if (dt.Rows[i].Cells[j].Value != null)
+                    {
+                        if (dt.Columns[j].Index == 1)
+                        {
+                            if (j0 != dt.Rows.Count)
+                            {
+                                yMat[0, j0] = double.Parse(dt.Rows[i].Cells[j].Value.ToString());
+                                j0++;
+                            }
+                        }
+                        if (dt.Columns[j].Index > 1/* && !toThrowAway.Contains(i))
+                        {
+                            x1Mat[i1, j1] = double.Parse(dt.Rows[i].Cells[j].Value.ToString());
+                            i1++;
+                            if (i1 >= dt.ColumnCount-2)
+                            {
+                                i1 = 0;
+                                j1++;
+                            }
+                        }
+                    }
+                }
+            }
+            
             //Xt*X
             double[,] x1Mult = Multiplication(Transposition(x1Mat), x1Mat);
-            double[,] x2Mult = Multiplication(Transposition(x2Mat), x2Mat);
-            double[,] x3Mult = Multiplication(Transposition(x3Mat), x3Mat);
-            double[,] x4Mult = Multiplication(Transposition(x4Mat), x4Mat);
 
             //(Xt*X)^(-1)
             double[,] x1Reversed = Inversing(x1Mult, x1Mult.GetLength(0));
-            double[,] x2Reversed = Inversing(x2Mult, x2Mult.GetLength(0));
-            double[,] x3Reversed = Inversing(x3Mult, x3Mult.GetLength(0));
-            double[,] x4Reversed = Inversing(x4Mult, x4Mult.GetLength(0));
 
             //(Xt*X)^(-1)*Xt
             double[,] x1 = Multiplication(x1Reversed, Transposition(x1Mat));
-            double[,] x2 = Multiplication(x2Reversed, Transposition(x2Mat));
-            double[,] x3 = Multiplication(x3Reversed, Transposition(x3Mat));
-            double[,] x4 = Multiplication(x4Reversed, Transposition(x4Mat));
 
             //(Xt*X)^(-1)*Xt*Y
-            var b1 = Multiplication(x1, yMat);
-            var b2 = Multiplication(x2, yMat);
-            var b3 = Multiplication(x3, yMat);
-            var b4 = Multiplication(x4, yMat);
-
-            //var beta1 =PearsonCorrelation.GetSimilarityScore(rez, rez);
+            var b1 = Multiplication(yMat, x1);
+*/
         }
 
         private void dt_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
         {
-            e.Column.SortMode = DataGridViewColumnSortMode.NotSortable;
-            dt.SelectionMode = DataGridViewSelectionMode.FullColumnSelect;
-            dt.MultiSelect = true;
         }
 
         private static double[,] Transposition(double[,] matr)
@@ -809,6 +815,391 @@ namespace Collinear_Analysis
                 }
             }
             return r;
+        }
+
+
+        public static double StudentTest(double t, double df)
+        {
+            // Для df с очень большими целыми значениями или
+            // двойной точности. Адаптировано из ACM-алгоритма 395.
+            // Возвращает двухстороннее (2-tail) p-значение.
+            double n = df; // для синхронизации с ACM-именем параметра
+            double a, b, y;
+
+            t = t * t;
+            y = t / n;
+            b = y + 1.0;
+            if (y > 1.0E-6) y = Math.Log(b);
+            a = n - 0.5;
+            b = 48.0 * a * a;
+            y = a * y;
+
+            y = (((((-0.4 * y - 3.3) * y - 24.0) * y - 85.5) /
+              (0.8 * y * y + 100.0 + b) + y + 3.0) / b + 1.0) *
+              Math.Sqrt(y);
+            return 2.0 * Gauss(-y); // ACM-алгоритм 209
+        }
+
+        public static double Gauss(double z)
+        {
+            // ввод = z-value (от -inf до +inf)
+            // вывод = p под кривой стандартного нормального
+            // распределения от -inf до z, например,
+            // если z = 0.0, функция возвращает 0.5000
+
+            // ACM-алгоритм #209
+            double y; // случайная переменная (scratch variable) в 209
+            double p; // результат, называемый z в 209
+            double w; // случайная переменная в 209
+
+            if (z == 0.0)
+                p = 0.0;
+            else
+            {
+                y = Math.Abs(z) / 2;
+                if (y >= 3.0)
+                {
+                    p = 1.0;
+                }
+                else if (y < 1.0)
+                {
+                    w = y * y;
+                    p = ((((((((0.000124818987 * w
+                      - 0.001075204047) * w + 0.005198775019) * w
+                      - 0.019198292004) * w + 0.059054035642) * w
+                      - 0.151968751364) * w + 0.319152932694) * w
+                      - 0.531923007300) * w + 0.797884560593) * y * 2.0;
+                }
+                else
+                {
+                    y = y - 2.0;
+                    p = (((((((((((((-0.000045255659 * y
+                      + 0.000152529290) * y - 0.000019538132) * y
+                      - 0.000676904986) * y + 0.001390604284) * y
+                      - 0.000794620820) * y - 0.002034254874) * y
+                      + 0.006549791214) * y - 0.010557625006) * y
+                      + 0.011630447319) * y - 0.009279453341) * y
+                      + 0.005353579108) * y - 0.002141268741) * y
+                      + 0.000535310849) * y + 0.999936657524;
+                }
+            }
+
+            if (z > 0.0)
+                return (p + 1.0) / 2;
+            else
+                return (1.0 - p) / 2;
+        }
+
+
+        static double[] Solve(double[][] design)
+        {
+            // find linear regression coefficients
+            // 1. peel off X matrix and Y vector
+            int rows =  design.Length;
+            int cols =  design[0].Length;
+            double[][] X = MatrixCreate(rows, cols - 1);
+            double[][] Y = MatrixCreate(rows, 1); // a column vector
+
+            int j;
+            for (int i = 0; i < rows; ++i)
+            {
+                for (j = 0; j < cols - 1; ++j)
+                {
+                    X[i][j] = design[i][j];
+                }
+                Y[i][0] = design[i][j]; // last column
+            }
+
+            // 2. B = inv(Xt * X) * Xt * y
+            double[][] Xt = MatrixTranspose(X);
+            double[][] XtX = MatrixProduct(Xt, X);
+            double[][] inv = MatrixInverse(XtX);
+            double[][] invXt = MatrixProduct(inv, Xt);
+
+            double[][] mResult = MatrixProduct(invXt, Y);
+            double[] result = MatrixToVector(mResult);
+            return result;
+        } // Solve
+
+        static double[][] MatrixCreate(int rows, int cols)
+        {
+            // allocates/creates a matrix initialized to all 0.0
+            // do error checking here
+            double[][] result = new double[rows][];
+            for (int i = 0; i < rows; ++i)
+                result[i] = new double[cols];
+            return result;
+        }
+
+        static double[][] MatrixTranspose(double[][] matrix)
+        {
+            int rows = matrix.Length;
+            int cols = matrix[0].Length;
+            double[][] result = MatrixCreate(cols, rows); // note indexing
+            for (int i = 0; i < rows; ++i)
+            {
+                for (int j = 0; j < cols; ++j)
+                {
+                    result[j][i] = matrix[i][j];
+                }
+            }
+            return result;
+        } // TransposeMatrix
+
+        static double[][] MatrixProduct(double[][] matrixA, double[][] matrixB)
+        {
+            int aRows = matrixA.Length; int aCols = matrixA[0].Length;
+            int bRows = matrixB.Length; int bCols = matrixB[0].Length;
+            if (aCols != bRows)
+                throw new Exception("Non-conformable matrices in MatrixProduct");
+
+            double[][] result = MatrixCreate(aRows, bCols);
+
+            for (int i = 0; i < aRows; ++i) // each row of A
+                for (int j = 0; j < bCols; ++j) // each col of B
+                    for (int k = 0; k < aCols; ++k) // could use k < bRows
+                        result[i][j] += matrixA[i][k] * matrixB[k][j];
+            
+
+            return result;
+        }
+
+        static double[][] MatrixInverse(double[][] matrix)
+        {
+            int n = matrix.Length;
+            double[][] result = MatrixDuplicate(matrix);
+
+            int[] perm;
+            int toggle;
+            double[][] lum = MatrixDecompose(matrix, out perm, out toggle);
+            if (lum == null)
+                throw new Exception("Unable to compute inverse");
+
+            double[] b = new double[n];
+            for (int i = 0; i < n; ++i)
+            {
+                for (int j = 0; j < n; ++j)
+                {
+                    if (i == perm[j])
+                        b[j] = 1.0;
+                    else
+                        b[j] = 0.0;
+                }
+
+                double[] x = HelperSolve(lum, b); // use decomposition
+
+                for (int j = 0; j < n; ++j)
+                    result[j][i] = x[j];
+            }
+            return result;
+        }
+
+        static double[] MatrixToVector(double[][] matrix)
+        {
+            // single column matrix to vector
+            int rows = matrix.Length;
+            int cols = matrix[0].Length;
+            if (cols != 1)
+                throw new Exception("Bad matrix");
+            double[] result = new double[rows];
+            for (int i = 0; i < rows; ++i)
+                result[i] = matrix[i][0];
+            return result;
+        }
+
+        static double[][] MatrixDuplicate(double[][] matrix)
+        {
+            // allocates/creates a duplicate of a matrix
+            double[][] result = MatrixCreate(matrix.Length, matrix[0].Length);
+            for (int i = 0; i < matrix.Length; ++i) // copy the values
+                for (int j = 0; j < matrix[i].Length; ++j)
+                    result[i][j] = matrix[i][j];
+            return result;
+        }
+
+        static double[][] MatrixDecompose(double[][] matrix, out int[] perm,
+          out int toggle)
+        {
+            // Doolittle LUP decomposition with partial pivoting.
+            // returns: result is L (with 1s on diagonal) and U;
+            // perm holds row permutations; toggle is +1 or -1 (even or odd)
+            int rows = matrix.Length;
+            int cols = matrix[0].Length;
+            if (rows != cols)
+                throw new Exception("Non-square mattrix");
+
+            int n = rows; // convenience
+
+            double[][] result = MatrixDuplicate(matrix); // 
+
+            perm = new int[n]; // set up row permutation result
+            for (int i = 0; i < n; ++i) { perm[i] = i; }
+
+            toggle = 1; // toggle tracks row swaps
+
+            for (int j = 0; j < n - 1; ++j) // each column
+            {
+                double colMax = Math.Abs(result[j][j]);
+                int pRow = j;
+                //for (int i = j + 1; i < n; ++i) // deprecated
+                //{
+                //  if (result[i][j] > colMax)
+                //  {
+                //    colMax = result[i][j];
+                //    pRow = i;
+                //  }
+                //}
+
+                for (int i = j + 1; i < n; ++i) // reader Matt V needed this:
+                {
+                    if (Math.Abs(result[i][j]) > colMax)
+                    {
+                        colMax = Math.Abs(result[i][j]);
+                        pRow = i;
+                    }
+                }
+                // Not sure if this approach is needed always, or not.
+
+                if (pRow != j) // if largest value not on pivot, swap rows
+                {
+                    double[] rowPtr = result[pRow];
+                    result[pRow] = result[j];
+                    result[j] = rowPtr;
+
+                    int tmp = perm[pRow]; // and swap perm info
+                    perm[pRow] = perm[j];
+                    perm[j] = tmp;
+
+                    toggle = -toggle; // adjust the row-swap toggle
+                }
+
+                // -------------------------------------------------------------
+                // This part added later (not in original code) 
+                // and replaces the 'return null' below.
+                // if there is a 0 on the diagonal, find a good row 
+                // from i = j+1 down that doesn't have
+                // a 0 in column j, and swap that good row with row j
+
+                if (result[j][j] == 0.0)
+                {
+                    // find a good row to swap
+                    int goodRow = -1;
+                    for (int row = j + 1; row < n; ++row)
+                    {
+                        if (result[row][j] != 0.0)
+                            goodRow = row;
+                    }
+
+                    if (goodRow == -1)
+                        throw new Exception("Cannot use Doolittle's method");
+
+                    // swap rows so 0.0 no longer on diagonal
+                    double[] rowPtr = result[goodRow];
+                    result[goodRow] = result[j];
+                    result[j] = rowPtr;
+
+                    int tmp = perm[goodRow]; // and swap perm info
+                    perm[goodRow] = perm[j];
+                    perm[j] = tmp;
+
+                    toggle = -toggle; // adjust the row-swap toggle
+                }
+                // -------------------------------------------------------------
+
+                //if (Math.Abs(result[j][j]) < 1.0E-20) // deprecated
+                //  return null; // consider a throw
+
+                for (int i = j + 1; i < n; ++i)
+                {
+                    result[i][j] /= result[j][j];
+                    for (int k = j + 1; k < n; ++k)
+                    {
+                        result[i][k] -= result[i][j] * result[j][k];
+                    }
+                }
+
+            } // main j column loop
+
+            return result;
+        } // MatrixDecompose
+
+        static double[] HelperSolve(double[][] luMatrix, double[] b)
+        {
+            // before calling this helper, permute b using the perm array
+            // from MatrixDecompose that generated luMatrix
+            int n = luMatrix.Length;
+            double[] x = new double[n];
+            b.CopyTo(x, 0);
+
+            for (int i = 1; i < n; ++i)
+            {
+                double sum = x[i];
+                for (int j = 0; j < i; ++j)
+                    sum -= luMatrix[i][j] * x[j];
+                x[i] = sum;
+            }
+
+            x[n - 1] /= luMatrix[n - 1][n - 1];
+            for (int i = n - 2; i >= 0; --i)
+            {
+                double sum = x[i];
+                for (int j = i + 1; j < n; ++j)
+                    sum -= luMatrix[i][j] * x[j];
+                x[i] = sum / luMatrix[i][i];
+            }
+
+            return x;
+        }
+
+        static double[][] Design(double[][] data)
+        {
+            // add a leading col of 1.0 values
+            int rows = data.Length;
+            int cols = data[0].Length;
+            double[][] result = MatrixCreate(rows, cols + 1);
+            for (int i = 0; i < rows; ++i)
+                result[i][0] = 1.0;
+
+            for (int i = 0; i < rows; ++i)
+                for (int j = 0; j < cols; ++j)
+                    result[i][j + 1] = data[i][j];
+
+            return result;
+        }
+
+        static double RSquared(double[][] data, double[] coef)
+        {
+            // 'coefficient of determination'
+            int rows = data.Length;
+            int cols = data[0].Length;
+
+            // 1. compute mean of y
+            double ySum = 0.0;
+            for (int i = 0; i < rows; ++i)
+                ySum += data[i][0]; // first column
+            double yMean = ySum / rows;
+
+            // 2. sum of squared residuals & tot sum squares
+            double ssr = 0.0;
+            double sst = 0.0;
+            double y; // actual y value
+            double predictedY; // using the coef[] 
+            for (int i = 0; i < rows; ++i)
+            {
+                y = data[i][0]; // get actual y
+
+                predictedY = coef[0]; // start w/ intercept constant
+                for (int j = 0; j < cols-2; j++) // j is col of data
+                    predictedY += coef[j+1] * data[i][j]; // careful
+
+                ssr += (y - predictedY) * (y - predictedY);
+                sst += (y - yMean) * (y - yMean);
+            }
+
+            if (sst == 0.0)
+                throw new Exception("All y values equal");
+            else
+                return 1.0 - (ssr / sst);
         }
     }
 }
