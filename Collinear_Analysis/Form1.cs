@@ -672,6 +672,9 @@ namespace Collinear_Analysis
 
         private void RegressionAnalysis(List<int> toThrowAway)
         {
+            CoefReg.Columns.Clear();
+            formula_Tb.Text = string.Empty;
+
             double[][] result = new double[dt.RowCount][];
 
             for (int i = 0; i < dt.RowCount; i++)
@@ -732,65 +735,59 @@ namespace Collinear_Analysis
             var res = Solve(design, toThrowAway);
 
             double R2 = RSquared(result, res);
-
+            
             CoefReg.Columns.Add("col", "Name");
             CoefReg.Columns.Add("col", "Coefficient");
-            for (int i = 0; i < dt.ColumnCount-1; i++)
-            {
-                CoefReg.Rows.Add(dt.Columns[i+1].HeaderText, res[i]);
-            }
-            CoefReg.Rows.Add("R-Squared", Math.Round(R2*100, 0).ToString() +" %");
-            formula_Tb.Text ="y = " + Math.Round(res[0],2) + " + " + Math.Round(res[1],2) + "X" + dt.Columns[2].HeaderText + " + " + Math.Round(res[2],2) + "X" + dt.Columns[3].HeaderText + " + " + Math.Round(res[3],2) + "X" + dt.Columns[4].HeaderText;
-            #region onotherWay
-            /*
-            List<double[,]> matrixList = new List<double[,]>();
-            double[,] yMat = new double[1, dt.RowCount];
-            double[,] x1Mat = new double[dt.ColumnCount - 2, dt.RowCount];
 
-            int i1 = 0;
-            int j0 = 0, j1 = 0, j2 = 0, j3 = 0, j4 = 0;
-            
-            for (int i = 0; i < dt.Rows.Count; i++)
+            if (toThrowAway.Count == 0 && dt.SelectedColumns.Count == 0)
             {
-                for (int j = 0; j < dt.ColumnCount ; j++)
+                for (int i = 0; i < dt.ColumnCount - 1; i++)
                 {
-                    if (dt.Rows[i].Cells[j].Value != null)
-                    {
-                        if (dt.Columns[j].Index == 1)
-                        {
-                            if (j0 != dt.Rows.Count)
-                            {
-                                yMat[0, j0] = double.Parse(dt.Rows[i].Cells[j].Value.ToString());
-                                j0++;
-                            }
-                        }
-                        if (dt.Columns[j].Index > 1/* && !toThrowAway.Contains(i))
-                        {
-                            x1Mat[i1, j1] = double.Parse(dt.Rows[i].Cells[j].Value.ToString());
-                            i1++;
-                            if (i1 >= dt.ColumnCount-2)
-                            {
-                                i1 = 0;
-                                j1++;
-                            }
-                        }
-                    }
+                    CoefReg.Rows.Add(dt.Columns[i + 1].HeaderText, res[i]);
                 }
+                CoefReg.Rows.Add("R-Squared", Math.Round(R2 * 100, 0).ToString() + " %");
+                string formula = "y = " + Math.Round(res[0], 2);
+                for(int i = 1; i < res.Length; i++)
+                {
+                    string sign = res[i] > 0 ? " + " : " - ";
+                    formula += sign + Math.Abs(Math.Round(res[i],2)).ToString() + "X(" + dt.Columns[i].HeaderText + ") " + " ";
+                }
+                formula_Tb.Text = formula;
+            }
+
+            else if (toThrowAway.Count > 0)
+            {
+                for (int i = 0; i < dt.ColumnCount - 1; i++)
+                {
+                    if (!toThrowAway.Contains(dt.Columns[i + 1].Index - 1))
+                        CoefReg.Rows.Add(dt.Columns[i + 1].HeaderText, res[i]);
+                }
+                CoefReg.Rows.Add("R-Squared", Math.Round(R2 * 100, 0).ToString() + " %");
+                string formula = "y = " + Math.Round(res[0], 2);
+                for (int i = 1; i < res.Length; i++)
+                {
+                    string sign = res[i] > 0 ? " + " : " - ";
+                    formula += sign + Math.Abs(Math.Round(res[i], 2)).ToString() + "X(" + dt.Columns[i].HeaderText + ") " + " ";
+                }
+                formula_Tb.Text = formula;
+            }
+
+            else if (dt.SelectedColumns.Count > 0)
+            {
+                for (int i = dt.SelectedColumns.Count-1; i>=0;i--)
+                {
+                    CoefReg.Rows.Add(dt.SelectedColumns[i].HeaderText, res[dt.SelectedColumns.Count-i-1]);
+                }
+                CoefReg.Rows.Add("R-Squared", Math.Round(R2 * 100, 0).ToString() + " %");
+                string formula = "y = " + Math.Round(res[0], 2);
+                for (int i = 1; i < res.Length; i++)
+                {
+                    string sign = res[i] > 0 ? " + " : " - ";
+                    formula += sign + Math.Abs(Math.Round(res[i], 2)).ToString() + "X(" + dt.SelectedColumns[dt.SelectedColumns.Count-i-1].HeaderText + ") " + " ";
+                }
+                formula_Tb.Text = formula;
             }
             
-            //Xt*X
-            double[,] x1Mult = Multiplication(Transposition(x1Mat), x1Mat);
-
-            //(Xt*X)^(-1)
-            double[,] x1Reversed = Inversing(x1Mult, x1Mult.GetLength(0));
-
-            //(Xt*X)^(-1)*Xt
-            double[,] x1 = Multiplication(x1Reversed, Transposition(x1Mat));
-
-            //(Xt*X)^(-1)*Xt*Y
-            var b1 = Multiplication(yMat, x1);
-*/
-            #endregion
         }
 
         private void dt_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
