@@ -43,6 +43,7 @@
             this.Collinear = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label14 = new System.Windows.Forms.Label();
+            this.Fishers_Tb = new System.Windows.Forms.TextBox();
             this.StudentAnalysisTb = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.Partial = new System.Windows.Forms.DataGridView();
@@ -67,9 +68,8 @@
             this.normDt = new System.Windows.Forms.DataGridView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button4 = new System.Windows.Forms.Button();
-            this.transp = new System.Windows.Forms.DataGridView();
-            this.InverseReg = new System.Windows.Forms.DataGridView();
-            this.Fishers_Tb = new System.Windows.Forms.TextBox();
+            this.CoefReg = new System.Windows.Forms.DataGridView();
+            this.formula_Tb = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.matr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -80,8 +80,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.InverseMatrix)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.normDt)).BeginInit();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.transp)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.InverseReg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CoefReg)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -264,6 +263,14 @@
             this.label14.Size = new System.Drawing.Size(101, 29);
             this.label14.TabIndex = 32;
             this.label14.Text = "Analysis";
+            // 
+            // Fishers_Tb
+            // 
+            this.Fishers_Tb.Location = new System.Drawing.Point(1092, 95);
+            this.Fishers_Tb.Multiline = true;
+            this.Fishers_Tb.Name = "Fishers_Tb";
+            this.Fishers_Tb.Size = new System.Drawing.Size(278, 285);
+            this.Fishers_Tb.TabIndex = 31;
             // 
             // StudentAnalysisTb
             // 
@@ -466,9 +473,9 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.formula_Tb);
             this.tabPage1.Controls.Add(this.button4);
-            this.tabPage1.Controls.Add(this.transp);
-            this.tabPage1.Controls.Add(this.InverseReg);
+            this.tabPage1.Controls.Add(this.CoefReg);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -479,39 +486,29 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(476, 284);
+            this.button4.Location = new System.Drawing.Point(138, 7);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.Size = new System.Drawing.Size(162, 23);
             this.button4.TabIndex = 2;
-            this.button4.Text = "Transp";
+            this.button4.Text = "Regression Analysis";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // transp
+            // CoefReg
             // 
-            this.transp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.transp.Location = new System.Drawing.Point(452, 36);
-            this.transp.Name = "transp";
-            this.transp.RowTemplate.Height = 24;
-            this.transp.Size = new System.Drawing.Size(922, 207);
-            this.transp.TabIndex = 1;
+            this.CoefReg.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.CoefReg.Location = new System.Drawing.Point(3, 36);
+            this.CoefReg.Name = "CoefReg";
+            this.CoefReg.RowTemplate.Height = 24;
+            this.CoefReg.Size = new System.Drawing.Size(471, 250);
+            this.CoefReg.TabIndex = 0;
             // 
-            // InverseReg
+            // formula_Tb
             // 
-            this.InverseReg.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.InverseReg.Location = new System.Drawing.Point(3, 36);
-            this.InverseReg.Name = "InverseReg";
-            this.InverseReg.RowTemplate.Height = 24;
-            this.InverseReg.Size = new System.Drawing.Size(434, 668);
-            this.InverseReg.TabIndex = 0;
-            // 
-            // Fishers_Tb
-            // 
-            this.Fishers_Tb.Location = new System.Drawing.Point(1092, 95);
-            this.Fishers_Tb.Multiline = true;
-            this.Fishers_Tb.Name = "Fishers_Tb";
-            this.Fishers_Tb.Size = new System.Drawing.Size(278, 285);
-            this.Fishers_Tb.TabIndex = 31;
+            this.formula_Tb.Location = new System.Drawing.Point(526, 36);
+            this.formula_Tb.Name = "formula_Tb";
+            this.formula_Tb.Size = new System.Drawing.Size(833, 22);
+            this.formula_Tb.TabIndex = 3;
             // 
             // Form1
             // 
@@ -533,8 +530,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.InverseMatrix)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.normDt)).EndInit();
             this.tabPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.transp)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.InverseReg)).EndInit();
+            this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CoefReg)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -577,10 +574,10 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox StudentAnalysisTb;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.DataGridView InverseReg;
+        private System.Windows.Forms.DataGridView CoefReg;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.DataGridView transp;
         private System.Windows.Forms.TextBox Fishers_Tb;
+        private System.Windows.Forms.TextBox formula_Tb;
     }
 }
 

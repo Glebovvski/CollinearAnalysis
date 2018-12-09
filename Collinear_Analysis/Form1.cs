@@ -158,7 +158,7 @@ namespace Collinear_Analysis
                 colCount = dt.ColumnCount - 1;
                 rowCount = dt.RowCount;
             }
-            
+
 
             //Input values from stats
             //with all columns
@@ -168,7 +168,7 @@ namespace Collinear_Analysis
                 {
                     for (j = 0; j < colCount; j++)
                     {
-                        matrs[i, j] = Convert.ToDouble(dt.Rows[i].Cells[j+1].Value);
+                        matrs[i, j] = Convert.ToDouble(dt.Rows[i].Cells[j + 1].Value);
                     }
                 }
             }
@@ -565,13 +565,13 @@ namespace Collinear_Analysis
         {
             //Обернена матриця
             double[,] ober = Inversing(correlationMat, correlationMat.GetLength(0));
-            
+
             for (int i = 0; i < correlationMat.GetLength(0); i++)
             {
                 for (int j = 0; j < correlationMat.GetLength(1); j++)
                 {
                     if (i == 0)
-                        InverseMatrix.Columns.Add("col",dt.Columns[j+1].HeaderText);
+                        InverseMatrix.Columns.Add("col", dt.Columns[j + 1].HeaderText);
                     if (j == 0)
                         InverseMatrix.Rows.Add();
                     InverseMatrix.Rows[i].Cells[j].Value = ober[i, j];
@@ -673,7 +673,7 @@ namespace Collinear_Analysis
         private void RegressionAnalysis(List<int> toThrowAway)
         {
             double[][] result = new double[dt.RowCount][];
-            
+
             for (int i = 0; i < dt.RowCount; i++)
             {
                 if (toThrowAway.Count == 0 && dt.SelectedColumns.Count == 0)
@@ -729,9 +729,19 @@ namespace Collinear_Analysis
 
             double[][] design = Design(result);
 
-            var res = Solve(design);
+            var res = Solve(design, toThrowAway);
 
             double R2 = RSquared(result, res);
+
+            CoefReg.Columns.Add("col", "Name");
+            CoefReg.Columns.Add("col", "Coefficient");
+            for (int i = 0; i < dt.ColumnCount-1; i++)
+            {
+                CoefReg.Rows.Add(dt.Columns[i+1].HeaderText, res[i]);
+            }
+            CoefReg.Rows.Add("R-Squared", Math.Round(R2*100, 0).ToString() +" %");
+            formula_Tb.Text ="y = " + Math.Round(res[0],2) + " + " + Math.Round(res[1],2) + "X" + dt.Columns[2].HeaderText + " + " + Math.Round(res[2],2) + "X" + dt.Columns[3].HeaderText + " + " + Math.Round(res[3],2) + "X" + dt.Columns[4].HeaderText;
+            #region onotherWay
             /*
             List<double[,]> matrixList = new List<double[,]>();
             double[,] yMat = new double[1, dt.RowCount];
@@ -780,6 +790,7 @@ namespace Collinear_Analysis
             //(Xt*X)^(-1)*Xt*Y
             var b1 = Multiplication(yMat, x1);
 */
+            #endregion
         }
 
         private void dt_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
@@ -891,23 +902,37 @@ namespace Collinear_Analysis
         }
 
 
-        static double[] Solve(double[][] design)
+        double[] Solve(double[][] design, List<int> toThrowAway)
         {
             // find linear regression coefficients
             // 1. peel off X matrix and Y vector
-            int rows =  design.Length;
-            int cols =  design[0].Length;
+            int rows = design.Length;
+            int cols = design[0].Length;
+            
             double[][] X = MatrixCreate(rows, cols - 1);
             double[][] Y = MatrixCreate(rows, 1); // a column vector
 
             int j;
+            int j1 = 0;
             for (int i = 0; i < rows; ++i)
             {
-                for (j = 0; j < cols - 1; ++j)
+                for (j = 0; j < cols; ++j)
                 {
-                    X[i][j] = design[i][j];
+                    if (j != 1)
+                    {
+                        X[i][j1] = design[i][j];
+                        j1++;
+                        if (j1 >= cols - 1) j1 = 0;
+                    }
                 }
-                Y[i][0] = design[i][j]; // last column
+            }
+
+            for (int i = 0; i < rows; ++i)
+            {
+                for (j = 0; j < cols; ++j)
+                {
+                    Y[i][0] = design[i][1]; // Y column
+                }
             }
 
             // 2. B = inv(Xt * X) * Xt * y
@@ -921,7 +946,7 @@ namespace Collinear_Analysis
             return result;
         } // Solve
 
-        static double[][] MatrixCreate(int rows, int cols)
+        double[][] MatrixCreate(int rows, int cols)
         {
             // allocates/creates a matrix initialized to all 0.0
             // do error checking here
@@ -931,7 +956,7 @@ namespace Collinear_Analysis
             return result;
         }
 
-        static double[][] MatrixTranspose(double[][] matrix)
+        double[][] MatrixTranspose(double[][] matrix)
         {
             int rows = matrix.Length;
             int cols = matrix[0].Length;
@@ -946,7 +971,7 @@ namespace Collinear_Analysis
             return result;
         } // TransposeMatrix
 
-        static double[][] MatrixProduct(double[][] matrixA, double[][] matrixB)
+        double[][] MatrixProduct(double[][] matrixA, double[][] matrixB)
         {
             int aRows = matrixA.Length; int aCols = matrixA[0].Length;
             int bRows = matrixB.Length; int bCols = matrixB[0].Length;
@@ -959,12 +984,12 @@ namespace Collinear_Analysis
                 for (int j = 0; j < bCols; ++j) // each col of B
                     for (int k = 0; k < aCols; ++k) // could use k < bRows
                         result[i][j] += matrixA[i][k] * matrixB[k][j];
-            
+
 
             return result;
         }
 
-        static double[][] MatrixInverse(double[][] matrix)
+        double[][] MatrixInverse(double[][] matrix)
         {
             int n = matrix.Length;
             double[][] result = MatrixDuplicate(matrix);
@@ -994,7 +1019,7 @@ namespace Collinear_Analysis
             return result;
         }
 
-        static double[] MatrixToVector(double[][] matrix)
+        double[] MatrixToVector(double[][] matrix)
         {
             // single column matrix to vector
             int rows = matrix.Length;
@@ -1007,7 +1032,7 @@ namespace Collinear_Analysis
             return result;
         }
 
-        static double[][] MatrixDuplicate(double[][] matrix)
+        double[][] MatrixDuplicate(double[][] matrix)
         {
             // allocates/creates a duplicate of a matrix
             double[][] result = MatrixCreate(matrix.Length, matrix[0].Length);
@@ -1017,7 +1042,7 @@ namespace Collinear_Analysis
             return result;
         }
 
-        static double[][] MatrixDecompose(double[][] matrix, out int[] perm,
+        double[][] MatrixDecompose(double[][] matrix, out int[] perm,
           out int toggle)
         {
             // Doolittle LUP decomposition with partial pivoting.
@@ -1123,7 +1148,7 @@ namespace Collinear_Analysis
             return result;
         } // MatrixDecompose
 
-        static double[] HelperSolve(double[][] luMatrix, double[] b)
+        double[] HelperSolve(double[][] luMatrix, double[] b)
         {
             // before calling this helper, permute b using the perm array
             // from MatrixDecompose that generated luMatrix
@@ -1151,7 +1176,7 @@ namespace Collinear_Analysis
             return x;
         }
 
-        static double[][] Design(double[][] data)
+        double[][] Design(double[][] data)
         {
             // add a leading col of 1.0 values
             int rows = data.Length;
@@ -1167,7 +1192,7 @@ namespace Collinear_Analysis
             return result;
         }
 
-        static double RSquared(double[][] data, double[] coef)
+        double RSquared(double[][] data, double[] coef)
         {
             // 'coefficient of determination'
             int rows = data.Length;
@@ -1189,8 +1214,9 @@ namespace Collinear_Analysis
                 y = data[i][0]; // get actual y
 
                 predictedY = coef[0]; // start w/ intercept constant
-                for (int j = 0; j < cols-2; j++) // j is col of data
-                    predictedY += coef[j+1] * data[i][j]; // careful
+                for (int j = 0; j < cols - 1; ++j) // j is col of data
+                    predictedY += coef[j + 1] * data[i][j+1]; // careful
+                
 
                 ssr += (y - predictedY) * (y - predictedY);
                 sst += (y - yMean) * (y - yMean);
