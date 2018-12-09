@@ -86,31 +86,6 @@ namespace Collinear_Analysis
             }
         }
 
-        private void CollinearBuild_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void matr_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void dt_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
         private void button1_Click_1(object sender, EventArgs e)
         {
             dt.DataSource = string.Empty;
@@ -127,7 +102,6 @@ namespace Collinear_Analysis
                 OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT * FROM [Лист1$]", connection);
                 DataTable table = new DataTable();
                 adapter.Fill(table);
-                //dt.SortMode = DataGridViewColumnSortMode.NotSortable;
                 dt.DataSource = table;
                 foreach (DataGridViewColumn item in dt.Columns)
                 {
@@ -767,7 +741,7 @@ namespace Collinear_Analysis
                 for (int i = 1; i < res.Length; i++)
                 {
                     string sign = res[i] > 0 ? " + " : " - ";
-                    formula += sign + Math.Abs(Math.Round(res[i], 2)).ToString() + "X(" + dt.Columns[i].HeaderText + ") " + " ";
+                    formula += sign + Math.Abs(Math.Round(res[i], 2)).ToString() + "X(" + CoefReg.Rows[i].Cells[0].Value + ") " + " ";
                 }
                 formula_Tb.Text = formula;
             }
@@ -1063,14 +1037,6 @@ namespace Collinear_Analysis
             {
                 double colMax = Math.Abs(result[j][j]);
                 int pRow = j;
-                //for (int i = j + 1; i < n; ++i) // deprecated
-                //{
-                //  if (result[i][j] > colMax)
-                //  {
-                //    colMax = result[i][j];
-                //    pRow = i;
-                //  }
-                //}
 
                 for (int i = j + 1; i < n; ++i) // reader Matt V needed this:
                 {
@@ -1094,13 +1060,6 @@ namespace Collinear_Analysis
 
                     toggle = -toggle; // adjust the row-swap toggle
                 }
-
-                // -------------------------------------------------------------
-                // This part added later (not in original code) 
-                // and replaces the 'return null' below.
-                // if there is a 0 on the diagonal, find a good row 
-                // from i = j+1 down that doesn't have
-                // a 0 in column j, and swap that good row with row j
 
                 if (result[j][j] == 0.0)
                 {

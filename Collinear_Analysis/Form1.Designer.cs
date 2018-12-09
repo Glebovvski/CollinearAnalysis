@@ -115,7 +115,6 @@
             this.textBox2.Size = new System.Drawing.Size(368, 130);
             this.textBox2.TabIndex = 7;
             this.textBox2.Text = resources.GetString("textBox2.Text");
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // analysisTb
             // 
@@ -158,7 +157,6 @@
             this.dt.ShowEditingIcon = false;
             this.dt.Size = new System.Drawing.Size(540, 642);
             this.dt.TabIndex = 0;
-            this.dt.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dt_CellContentClick);
             // 
             // textBox1
             // 
