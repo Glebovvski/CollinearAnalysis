@@ -427,26 +427,6 @@ namespace Collinear_Analysis
                 "The highest correlation coefficient is: " + max + " of " + matr.Rows[maxi].HeaderCell.Value + " to " + matr.Rows[maxj].HeaderCell.Value;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void matr_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void tabPage2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
         public static double[,] Inversing(double[,] matrix, int len)
         {
             double[,] ob = new double[len, len];

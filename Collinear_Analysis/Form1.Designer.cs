@@ -105,7 +105,6 @@
             this.matr.RowTemplate.Height = 24;
             this.matr.Size = new System.Drawing.Size(788, 352);
             this.matr.TabIndex = 4;
-            this.matr.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.matr_CellContentClick_1);
             // 
             // textBox2
             // 
@@ -250,7 +249,6 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Multilollinear analysis";
             this.tabPage2.UseVisualStyleBackColor = true;
-            this.tabPage2.Click += new System.EventHandler(this.tabPage2_Click);
             // 
             // label14
             // 
@@ -448,7 +446,6 @@
             this.label4.Size = new System.Drawing.Size(172, 25);
             this.label4.TabIndex = 2;
             this.label4.Text = "Normalized values";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // button3
             // 
