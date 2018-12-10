@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Reflection;
-using ExcelObj = Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 using System.Data;
 using System.Data.OleDb;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -1110,6 +1110,65 @@ namespace Collinear_Analysis
             }
 
             return x;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Excel.Application excelapp = new Excel.Application();
+            Excel.Workbook workbook = excelapp.Workbooks.Add();
+            try
+            {
+                Excel.Worksheet worksheet = workbook.ActiveSheet;
+                worksheet.Name = "Collinearity matrix";
+                for (int i = 1; i < matr.RowCount + 1; i++)
+                {
+                    for (int j = 1; j < matr.ColumnCount + 1; j++)
+                    {
+                        worksheet.Rows[i].Columns[j] = matr.Rows[i - 1].Cells[j - 1].Value;
+                    }
+                }
+                
+                Excel.Worksheet newWorksheet;
+                newWorksheet = workbook.Sheets.Add();
+                newWorksheet.Name = "Student's t-test";
+                if (Student.Columns.Count > 0)
+                {
+                    for (int k = 1; k < Student.RowCount; k++)
+                    {
+                        for (int l = 1; l < Student.ColumnCount + 1; l++)
+                        {
+                            newWorksheet.Rows[k].Columns[l] = Student.Rows[k - 1].Cells[l - 1].Value;
+                        }
+                    }
+                }
+
+                Excel.Worksheet newWorksheet1;
+                newWorksheet1 = workbook.Sheets.Add();
+                newWorksheet1.Name = "Regression analysis";
+                if (CoefReg.Columns.Count > 0)
+                {
+                    for (int i = 1; i < CoefReg.RowCount + 1; i++)
+                    {
+                        for (int j = 1; j < CoefReg.ColumnCount + 1; j++)
+                        {
+                            newWorksheet1.Rows[i].Columns[j] = CoefReg.Rows[i - 1].Cells[j - 1].Value;
+                        }
+                    }
+                }
+                excelapp.AlertBeforeOverwriting = false;
+                workbook.SaveAs(@"D:\ucheba\Екология\2014_res.xls");
+                excelapp.Quit();
+
+                MessageBox.Show(@"Successfully saved in D:\ucheba\Екология\2014_res.xls");
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                excelapp.Quit();
+            }
         }
 
         double[][] Design(double[][] data)

@@ -67,9 +67,10 @@
             this.button3 = new System.Windows.Forms.Button();
             this.normDt = new System.Windows.Forms.DataGridView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.formula_Tb = new System.Windows.Forms.TextBox();
             this.button4 = new System.Windows.Forms.Button();
             this.CoefReg = new System.Windows.Forms.DataGridView();
-            this.formula_Tb = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.matr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -166,7 +167,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(328, 7);
+            this.button1.Location = new System.Drawing.Point(318, 6);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 12;
@@ -176,7 +177,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(413, 7);
+            this.button2.Location = new System.Drawing.Point(399, 6);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 13;
@@ -198,6 +199,7 @@
             // 
             // Collinear
             // 
+            this.Collinear.Controls.Add(this.button5);
             this.Collinear.Controls.Add(this.dt);
             this.Collinear.Controls.Add(this.button2);
             this.Collinear.Controls.Add(this.label1);
@@ -479,6 +481,13 @@
             this.tabPage1.Text = "Regression analysis";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // formula_Tb
+            // 
+            this.formula_Tb.Location = new System.Drawing.Point(526, 36);
+            this.formula_Tb.Name = "formula_Tb";
+            this.formula_Tb.Size = new System.Drawing.Size(833, 22);
+            this.formula_Tb.TabIndex = 3;
+            // 
             // button4
             // 
             this.button4.Location = new System.Drawing.Point(138, 7);
@@ -498,12 +507,15 @@
             this.CoefReg.Size = new System.Drawing.Size(471, 250);
             this.CoefReg.TabIndex = 0;
             // 
-            // formula_Tb
+            // button5
             // 
-            this.formula_Tb.Location = new System.Drawing.Point(526, 36);
-            this.formula_Tb.Name = "formula_Tb";
-            this.formula_Tb.Size = new System.Drawing.Size(833, 22);
-            this.formula_Tb.TabIndex = 3;
+            this.button5.Location = new System.Drawing.Point(484, 7);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 14;
+            this.button5.Text = "Save";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // Form1
             // 
@@ -573,6 +585,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TextBox Fishers_Tb;
         private System.Windows.Forms.TextBox formula_Tb;
+        private System.Windows.Forms.Button button5;
     }
 }
 
