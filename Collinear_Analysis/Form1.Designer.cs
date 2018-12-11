@@ -36,11 +36,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.dt = new System.Windows.Forms.DataGridView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.FilePath_Tb = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Collinear = new System.Windows.Forms.TabPage();
+            this.button5 = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label14 = new System.Windows.Forms.Label();
             this.Fishers_Tb = new System.Windows.Forms.TextBox();
@@ -70,7 +71,6 @@
             this.formula_Tb = new System.Windows.Forms.TextBox();
             this.button4 = new System.Windows.Forms.Button();
             this.CoefReg = new System.Windows.Forms.DataGridView();
-            this.button5 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.matr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -158,12 +158,12 @@
             this.dt.Size = new System.Drawing.Size(540, 642);
             this.dt.TabIndex = 0;
             // 
-            // textBox1
+            // FilePath_Tb
             // 
-            this.textBox1.Location = new System.Drawing.Point(19, 8);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(293, 22);
-            this.textBox1.TabIndex = 11;
+            this.FilePath_Tb.Location = new System.Drawing.Point(19, 8);
+            this.FilePath_Tb.Name = "FilePath_Tb";
+            this.FilePath_Tb.Size = new System.Drawing.Size(293, 22);
+            this.FilePath_Tb.TabIndex = 11;
             // 
             // button1
             // 
@@ -205,7 +205,7 @@
             this.Collinear.Controls.Add(this.label1);
             this.Collinear.Controls.Add(this.button1);
             this.Collinear.Controls.Add(this.matr);
-            this.Collinear.Controls.Add(this.textBox1);
+            this.Collinear.Controls.Add(this.FilePath_Tb);
             this.Collinear.Controls.Add(this.textBox2);
             this.Collinear.Controls.Add(this.label2);
             this.Collinear.Controls.Add(this.analysisTb);
@@ -217,6 +217,16 @@
             this.Collinear.TabIndex = 0;
             this.Collinear.Text = "Collinear Analysis";
             this.Collinear.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(484, 7);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 14;
+            this.button5.Text = "Save";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // tabPage2
             // 
@@ -507,16 +517,6 @@
             this.CoefReg.Size = new System.Drawing.Size(471, 250);
             this.CoefReg.TabIndex = 0;
             // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(484, 7);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 14;
-            this.button5.Text = "Save";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -551,7 +551,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridView dt;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox FilePath_Tb;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TabControl tabControl1;

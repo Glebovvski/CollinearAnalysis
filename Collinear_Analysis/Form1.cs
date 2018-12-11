@@ -97,7 +97,8 @@ namespace Collinear_Analysis
 
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                textBox1.Text = dialog.FileName;
+                dt.SelectionMode = DataGridViewSelectionMode.CellSelect;
+                FilePath_Tb.Text = dialog.FileName;
                 OleDbConnection connection = new OleDbConnection(string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0 Xml;HDR=YES\";", dialog.FileName));
                 OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT * FROM [Лист1$]", connection);
                 DataTable table = new DataTable();
@@ -1115,16 +1116,16 @@ namespace Collinear_Analysis
         private void button5_Click(object sender, EventArgs e)
         {
             Excel.Application excelapp = new Excel.Application();
-            Excel.Workbook workbook = excelapp.Workbooks.Add();
+            Excel.Workbook workbook = excelapp.Workbooks.Open(FilePath_Tb.Text);
             try
             {
-                Excel.Worksheet worksheet = workbook.ActiveSheet;
-                worksheet.Name = "Collinearity matrix";
+                Excel.Worksheet CollinearWS = workbook.Sheets.Add();
+                CollinearWS.Name = "Collinearity matrix";
                 for (int i = 1; i < matr.RowCount + 1; i++)
                 {
                     for (int j = 1; j < matr.ColumnCount + 1; j++)
                     {
-                        worksheet.Rows[i].Columns[j] = matr.Rows[i - 1].Cells[j - 1].Value;
+                        CollinearWS.Rows[i].Columns[j] = matr.Rows[i - 1].Cells[j - 1].Value;
                     }
                 }
                 
@@ -1156,10 +1157,10 @@ namespace Collinear_Analysis
                     }
                 }
                 excelapp.AlertBeforeOverwriting = false;
-                workbook.SaveAs(@"D:\ucheba\Екология\2014_res.xls");
+                workbook.SaveAs(FilePath_Tb.Text);
                 excelapp.Quit();
 
-                MessageBox.Show(@"Successfully saved in D:\ucheba\Екология\2014_res.xls");
+                MessageBox.Show(@"Successfully saved in "+FilePath_Tb.Text);
             }
             catch
             {
