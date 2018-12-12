@@ -11,11 +11,13 @@ using System.Linq;
 using System.Drawing;
 using Data = System.Collections.Generic.KeyValuePair<int, int>;
 using static alglib;
+using CountMatrixDimensional;
 
 namespace Collinear_Analysis
 {
     public partial class Form1 : Form
     {
+        
         double[,] rez;
         int sumRow = 0;
 
@@ -23,6 +25,8 @@ namespace Collinear_Analysis
 
         double min = 0;
         double max = 0;
+        double RowMatrixCorrection;
+        double ColumnMatrixCorrection;
         int mini = 0, minj = 0;
         int maxi = 0, maxj = 0;
 
@@ -42,7 +46,7 @@ namespace Collinear_Analysis
         private void Setmatr()
         {
             matr.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
+            #region Styles For Collinearity
             DataGridViewCellStyle styleMiddle = new DataGridViewCellStyle();
             styleMiddle.BackColor = System.Drawing.Color.Orange;
 
@@ -69,6 +73,8 @@ namespace Collinear_Analysis
                 for (int j = 0; j < matr.Rows[i].Cells.Count; j++)
                 {
                     double cell = double.Parse(matr.Rows[i].Cells[j].Value.ToString());
+                    RowMatrixCorrection = CountMatrixRowSum_Collinearity.CountMatrixSumForMatrix();
+                    ColumnMatrixCorrection = CountMatrixRowSum_Collinearity.CountMatrixSumForMatrix();
                     if ((cell >= 0.1 && cell <= 0.3) || (cell >= -0.3 && cell <= -0.1))
                         matr.Rows[i].Cells[j].Style = styleLowest;
                     else if ((cell > 0.3 && cell < 0.5) || (cell < -0.3 && cell > -0.5))
@@ -84,6 +90,7 @@ namespace Collinear_Analysis
                     else matr.Rows[i].Cells[j].Style = styleLowLow;
                 }
             }
+            #endregion
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -139,9 +146,9 @@ namespace Collinear_Analysis
             //with all columns
             if (dt.SelectedColumns.Count == 0)
             {
-                for (i = 0; i < rowCount; i++)
+                for (i = 0; i < rowCount - RowMatrixCorrection; i++)
                 {
-                    for (j = 0; j < colCount; j++)
+                    for (j = 0; j < colCount - ColumnMatrixCorrection; j++)
                     {
                         matrs[i, j] = Convert.ToDouble(dt.Rows[i].Cells[j + 1].Value);
                     }
@@ -219,8 +226,8 @@ namespace Collinear_Analysis
                             sumx = sumx + x[i, j];
                             y[i, j] = matrs[i, k];
                             sumy = sumy + y[i, j];
-                            sumxy = sumxy + x[i, j] * y[i, j];
-                            sumxx = sumxx + x[i, j] * x[i, j];
+                            sumxy = sumxy + x[i, j] * y[i, j]  - RowMatrixCorrection;
+                            sumxx = sumxx + x[i, j] * x[i, j] - ColumnMatrixCorrection;
                             sumyy = sumyy + y[i, j] * y[i, j];
                         }
                         avrx = sumx / sumRow;
@@ -305,10 +312,10 @@ namespace Collinear_Analysis
             disp = new double[matrs.GetLength(1)];
             double summ = 0;
             // Середнє
-            for (j = 0; j < matrs.GetLength(1); j++)
+            for (j = 0; j < matrs.GetLength(1) - RowMatrixCorrection; j++)
             {
                 summ = 0;
-                for (i = 0; i < matrs.GetLength(0); i++)
+                for (i = 0; i < matrs.GetLength(0) - ColumnMatrixCorrection; i++)
                 {
                     summ += matrs[i, j];
                 }
@@ -344,9 +351,9 @@ namespace Collinear_Analysis
             }
 
             rez = new double[matr.RowCount, matr.ColumnCount];
-            for (i = 0; i < matr.RowCount; i++)
+            for (i = 0; i < matr.RowCount  - RowMatrixCorrection; i++)
             {
-                for (j = 0; j < matr.ColumnCount; j++)
+                for (j = 0; j < matr.ColumnCount  - ColumnMatrixCorrection; j++)
                 {
                     rez[i, j] = Math.Round(Convert.ToDouble(matr.Rows[i].Cells[j].Value), 1);
                 }
@@ -497,7 +504,7 @@ namespace Collinear_Analysis
             FisherTB.Text = fish.ToString();
 
             double[] fisher = new double[rez.GetLength(0)];
-            for (int i = 0; i < InverseMatrix.RowCount - 1; i++)
+            for (int i = 0; i < InverseMatrix.RowCount - RowMatrixCorrection; i++)
             {
                 fisher[i] = Math.Round((ober[i, i] - 1) * (sumRow - rez.GetLength(0)) / (rez.GetLength(0) - 1), 2);
             }
@@ -521,7 +528,7 @@ namespace Collinear_Analysis
             //Обернена матриця
             double[,] ober = Inversing(correlationMat, correlationMat.GetLength(0));
 
-            for (int i = 0; i < correlationMat.GetLength(0); i++)
+            for (int i = 0; i < correlationMat.GetLength(0)+ RowMatrixCorrection; i++)
             {
                 for (int j = 0; j < correlationMat.GetLength(1); j++)
                 {
@@ -544,7 +551,7 @@ namespace Collinear_Analysis
             double[,] matrparkoef = new double[rez.GetLength(0), rez.GetLength(1)];
             for (int i = 0; i < InverseMatrix.RowCount - 1; i++)
             {
-                for (int j = 0; j < InverseMatrix.ColumnCount; j++)
+                for (int j = 0; j < InverseMatrix.ColumnCount- RowMatrixCorrection; j++)
                 {
                     if (i == 0)
                     {
@@ -566,7 +573,7 @@ namespace Collinear_Analysis
 
             for (int i = 0; i < Partial.RowCount - 1; i++)
             {
-                for (int j = 0; j < Partial.ColumnCount; j++)
+                for (int j = 0; j < Partial.ColumnCount- RowMatrixCorrection; j++)
                 {
                     if (i == 0)
                         Student.Columns.Add("col" + j, dt.Columns[j + 1].HeaderText);
